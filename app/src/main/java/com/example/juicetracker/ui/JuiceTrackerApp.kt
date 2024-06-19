@@ -42,6 +42,7 @@ import com.example.juicetracker.ui.homescreen.CheckAllUI
 import com.example.juicetracker.ui.homescreen.JuiceTrackerFAB
 import com.example.juicetracker.ui.homescreen.JuiceTrackerList
 import com.example.juicetracker.ui.homescreen.JuiceTrackerTopAppBar
+import com.example.juicetracker.ui.homescreen.search.SearchButton
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
