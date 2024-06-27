@@ -39,5 +39,8 @@
 
 
     <string name="search_icon">Search Icon</string>
+    <string name="back_icon">Back Icon</string>
+    <string name="title_activity_search_function">SearchFunction</string>
+    <string name="title_activity_search">SearchActivity</string>
 
 </resources>
