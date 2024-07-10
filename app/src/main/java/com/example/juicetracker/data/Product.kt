@@ -37,7 +37,9 @@ data class Product(
     val description: String = "",
     val color: String,
     val rating: Int,
-//    val minPrice: String = ""
+    val minPrice: Float,
+    val maxPrice: Float,
+    val  keyword: String,
 )
 
 enum class JuiceColor(val color: Color, @StringRes val label: Int) {

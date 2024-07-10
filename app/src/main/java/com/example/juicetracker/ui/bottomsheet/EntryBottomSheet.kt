@@ -44,8 +44,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.juicetracker.R
-import com.example.juicetracker.data.Product
 import com.example.juicetracker.data.JuiceColor
+import com.example.juicetracker.data.Product
 import com.example.juicetracker.ui.JuiceTrackerViewModel
 import java.util.Locale
 
@@ -107,19 +107,21 @@ fun SheetForm(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
+
         TextInputRow(
             inputLabel = stringResource(R.string.product_name),
             fieldValue = product.name,
             onValueChange = { name -> onUpdateJuice(product.copy(name = name)) },
             modifier = Modifier.fillMaxWidth()
         )
-        // TODO change this TextInputRow to minPrice
-        TextInputRow(
-            inputLabel = stringResource(R.string.min_price),
-            fieldValue = product.description,
-            onValueChange = { description -> onUpdateJuice(product.copy(description = description)) },
-            modifier = Modifier.fillMaxWidth()
-        )
+
+//        TextField(
+//            inputLabel = "Minimum Price",
+//            fieldValue = "",
+//            onValueChange = { minPrice -> onUpdateJuice(product.copy(minPrice = minPrice.toFloat())) },
+//            modifier = Modifier.fillMaxWidth()
+//        )
+
         ButtonRow(
             modifier = Modifier
                 .align(Alignment.End)

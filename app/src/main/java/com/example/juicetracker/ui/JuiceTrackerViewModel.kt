@@ -30,7 +30,16 @@ import kotlinx.coroutines.launch
  * View Model which maintain states for [JuiceTrackerApp]
  */
 class JuiceTrackerViewModel(private val productRepository: ProductRepository) : ViewModel() {
-    private val emptyProduct = Product(0, "", "", JuiceColor.Red.name, 3)
+    private val emptyProduct = Product(
+        id = 0,
+        name = "",
+        description = "",
+        color = JuiceColor.Red.name,
+        rating = 3,
+        minPrice = 0.0f,
+        maxPrice = 0.0f,
+        keyword = "",
+    )
     private val _currentJuiceStream = MutableStateFlow(emptyProduct)
     val currentProductStream: StateFlow<Product> = _currentJuiceStream
     val productListStream: Flow<List<Product>> = productRepository.productStream

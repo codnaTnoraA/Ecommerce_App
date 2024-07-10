@@ -115,16 +115,3 @@ fun DeleteButton(onDelete: () -> Unit, modifier: Modifier = Modifier) {
         )
     }
 }
-
-@Preview(showSystemUi = true)
-@Composable
-fun JuiceTrackerListPreview() {
-    MaterialTheme {
-        JuiceTrackerList(
-            products = listOf(
-                Product(1, "Mango", "Yummy!", "Yellow", 1),
-            ),
-            onDelete = {},
-            onUpdate = {})
-    }
-}
