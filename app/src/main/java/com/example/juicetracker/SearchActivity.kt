@@ -23,6 +23,15 @@ class SearchActivity : ComponentActivity() {
         }
     }
 
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        super.onBackPressed()
+        setContent {
+            MainActivity()
+        }
+    }
+
     @Preview
     @Composable
     fun Pr() {

@@ -19,12 +19,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.juicetracker.data.Product
 import com.example.juicetracker.data.JuiceColor
+import com.example.juicetracker.data.JuiceDao
 import com.example.juicetracker.data.ProductRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+
+private lateinit var productDao: JuiceDao
 
 /**
  * View Model which maintain states for [JuiceTrackerApp]
@@ -39,6 +42,7 @@ class JuiceTrackerViewModel(private val productRepository: ProductRepository) : 
         minPrice = 0.0f,
         maxPrice = 0.0f,
         keyword = "",
+        checkState = false
     )
     private val _currentJuiceStream = MutableStateFlow(emptyProduct)
     val currentProductStream: StateFlow<Product> = _currentJuiceStream
@@ -57,5 +61,13 @@ class JuiceTrackerViewModel(private val productRepository: ProductRepository) : 
 
     fun deleteJuice(product: Product) = viewModelScope.launch {
         productRepository.deleteJuice(product)
+    }
+
+    fun checkAll(product: Product) = viewModelScope.launch {
+        productDao.check(1)
+    }
+
+    fun uncheckAll(product: Product) = viewModelScope.launch {
+        productDao.check(0)
     }
 }

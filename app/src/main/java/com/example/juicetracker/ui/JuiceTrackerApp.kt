@@ -85,6 +85,7 @@ fun JuiceTrackerApp(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     CheckAllUI()
 
+
                     Spacer(modifier = Modifier.weight(1f))
 
                     AddProductButton(onClick = {juiceTrackerViewModel.resetCurrentJuice()

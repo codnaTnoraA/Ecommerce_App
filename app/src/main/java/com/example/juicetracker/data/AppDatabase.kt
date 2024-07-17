@@ -38,7 +38,7 @@ abstract class AppDatabase: RoomDatabase() {
                     // Setting this option in your app's database builder means that Room
                     // permanently deletes all data from the tables in your database when it
                     // attempts to perform a migration with no defined migration path.
-                    .fallbackToDestructiveMigration()
+//                    .fallbackToDestructiveMigration()
 //                    .addMigrations(MIGRATION_1_2)
                     .build()
                     .also {
@@ -49,7 +49,7 @@ abstract class AppDatabase: RoomDatabase() {
 
 //        private val MIGRATION_1_2 = object : Migration(1, 2) {
 //            override fun migrate(database: SupportSQLiteDatabase) {
-//                database.execSQL("ALTER TABLE Product ADD COLUMN minPrice FLOAT NOT NULL")
+//                database.execSQL("ALTER TABLE 'Product' ADD COLUMN 'checkState' BOOLEAN NOT NULL DEFAULT false")
 //            }
 //        }
     }

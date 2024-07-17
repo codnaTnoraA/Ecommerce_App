@@ -79,6 +79,7 @@ fun JuiceTrackerListItem(
         modifier = modifier,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
+
         var checkJuiceCheckedState = remember { mutableStateOf(false) }
         Checkbox(checked = checkJuiceCheckedState.value, onCheckedChange = {checkJuiceCheckedState.value = it})
         JuiceDetails(product, Modifier.weight(1f))
@@ -98,8 +99,8 @@ fun JuiceDetails(product: Product, modifier: Modifier = Modifier) {
             text = product.name,
             style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
         )
-        Text(product.description)
-//        Text(product.minPrice.toString())
+        Text("Minimum Price : ₱${product.minPrice.toString()} ")
+        Text("Maximum Price : ₱${product.maxPrice.toString()} ")
     }
 }
 

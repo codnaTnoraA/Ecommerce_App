@@ -38,4 +38,7 @@ interface JuiceDao {
 
     @Update
     suspend fun update(product: Product)
+
+    @Query("UPDATE product SET rating = :falsebools")
+    suspend fun check(falsebools: Int)
 }
