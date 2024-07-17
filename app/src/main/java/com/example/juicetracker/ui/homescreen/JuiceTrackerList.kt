@@ -114,5 +114,6 @@ fun DeleteButton(onDelete: () -> Unit, modifier: Modifier = Modifier) {
             painter = painterResource(R.drawable.delete_icon),
             contentDescription = stringResource(R.string.delete)
         )
+
     }
 }

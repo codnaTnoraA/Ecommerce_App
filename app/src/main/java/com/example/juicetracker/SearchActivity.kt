@@ -11,15 +11,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.juicetracker.ui.homescreen.search.SearchBarHomeScreen
-import com.example.juicetracker.ui.homescreen.search.SearchTopAppBar
 import com.example.juicetracker.ui.theme.JuiceTrackerTheme
 
 class SearchActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            SearchBarHomeScreen()
-//            TODO("MAKE BACK BUTTON ON PHONE REDIRECT TO MAIN ACTIVITY")
+            SearchBarHomeScreen{ finish() }
         }
     }
 
@@ -27,16 +25,7 @@ class SearchActivity : ComponentActivity() {
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         super.onBackPressed()
-        setContent {
-            MainActivity()
-        }
+        finish()
+
     }
-
-    @Preview
-    @Composable
-    fun Pr() {
-        SearchTopAppBar()
-    }
-
-
 }
