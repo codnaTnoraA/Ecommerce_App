@@ -95,6 +95,10 @@ fun SheetForm(
     onSubmit: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var subButtonEnabled by remember {
+        mutableStateOf(false)
+    }
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -135,14 +139,20 @@ fun SheetForm(
         )
         
         Text(text = "Note: Price will be based on your keyword")
-        
+
+        if (product.minPrice!! < product.maxPrice!! && product.name.isNotEmpty()) {
+            subButtonEnabled = true
+        } else {
+            subButtonEnabled = false
+        }
+
         ButtonRow(
             modifier = Modifier
                 .align(Alignment.End)
                 .padding(bottom = dimensionResource(R.dimen.padding_medium)),
             onCancel = onCancel,
             onSubmit = onSubmit,
-            submitButtonEnabled = product.name.isNotEmpty()
+            submitButtonEnabled = subButtonEnabled
         )
 
     }
