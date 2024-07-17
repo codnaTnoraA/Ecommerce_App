@@ -140,6 +140,7 @@ fun SheetForm(
         
         Text(text = "Note: Price will be based on your keyword")
 
+//      logic for making sure minPrice < maxPrice
         if (product.minPrice!! < product.maxPrice!! && product.name.isNotEmpty()) {
             subButtonEnabled = true
         } else {
