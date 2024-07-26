@@ -27,4 +27,6 @@ class RoomProductRepository(private val juiceDao: JuiceDao) : ProductRepository 
     override suspend fun addJuice(product: Product) = juiceDao.insert(product)
     override suspend fun deleteJuice(product: Product) = juiceDao.delete(product)
     override suspend fun updateJuice(product: Product) = juiceDao.update(product)
+
+
 }

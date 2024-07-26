@@ -27,8 +27,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-private lateinit var productDao: JuiceDao
-
 /**
  * View Model which maintain states for [JuiceTrackerApp]
  */
@@ -63,11 +61,11 @@ class JuiceTrackerViewModel(private val productRepository: ProductRepository) : 
         productRepository.deleteJuice(product)
     }
 
-    fun checkAll(product: Product) = viewModelScope.launch {
-        productDao.check(1)
-    }
-
-    fun uncheckAll(product: Product) = viewModelScope.launch {
-        productDao.check(0)
-    }
+//    fun checkAll(product: Product) = viewModelScope.launch {
+//        productDao.check(1)
+//    }
+//
+//    fun uncheckAll(product: Product) = viewModelScope.launch {
+//        productDao.check(0)
+//    }
 }
