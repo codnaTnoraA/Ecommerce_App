@@ -15,6 +15,7 @@
  */
 package com.example.juicetracker.data
 
+import androidx.lifecycle.LiveData
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -22,7 +23,11 @@ import kotlinx.coroutines.flow.Flow
  */
 interface ProductRepository {
     val productStream: Flow<List<Product>>
+
+    val juiceDao: JuiceDao
     suspend fun addJuice(product: Product)
     suspend fun deleteJuice(product: Product)
     suspend fun updateJuice(product: Product)
+    suspend fun updateCheckState(product: Product, checkState: Boolean)  = juiceDao.updateCheckState(checkState)
+
 }

@@ -80,8 +80,11 @@ fun JuiceTrackerListItem(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
 
-        var checkJuiceCheckedState = remember { mutableStateOf(false) }
-        Checkbox(checked = checkJuiceCheckedState.value, onCheckedChange = {checkJuiceCheckedState.value = it})
+        val checkJuiceCheckedState = remember { mutableStateOf(false) }
+        Checkbox(
+            checked = checkJuiceCheckedState.value,
+            onCheckedChange = { checkJuiceCheckedState.value = it} )
+
         JuiceDetails(product, Modifier.weight(1f))
         DeleteButton(
             onDelete = {

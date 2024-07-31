@@ -18,7 +18,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun SearchButton(
     modifier: Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    juiceTrackerViewModel: JuiceTrackerViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     IconButton(
         onClick = { onClick() },

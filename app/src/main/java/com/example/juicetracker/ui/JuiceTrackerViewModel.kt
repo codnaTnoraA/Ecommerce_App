@@ -15,15 +15,24 @@
  */
 package com.example.juicetracker.ui
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.juicetracker.data.Product
 import com.example.juicetracker.data.JuiceColor
-import com.example.juicetracker.data.JuiceDao
 import com.example.juicetracker.data.ProductRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -46,6 +55,53 @@ class JuiceTrackerViewModel(private val productRepository: ProductRepository) : 
     val currentProductStream: StateFlow<Product> = _currentJuiceStream
     val productListStream: Flow<List<Product>> = productRepository.productStream
 
+
+    fun updateCheckState(checkState: Boolean) {
+        viewModelScope.launch { productRepository.updateCheckState(emptyProduct, checkState) }
+    }
+
+
+
+    // Search ViewModel
+    //first state whether the search is happening or not
+    private val _isSearching = MutableStateFlow(false)
+    val isSearching = _isSearching.asStateFlow()
+
+    //second state the text typed by the user
+    private val _searchText = MutableStateFlow("")
+    val searchText = _searchText.asStateFlow()
+
+    val productsList = searchText
+        .combine(currentProductStream) { text, product ->//combine searchText with _contriesList
+            if (text.isBlank()) { //return the entry list of product if not is typed
+                product
+            } else {
+                product
+            }
+        }.stateIn(//basically convert the Flow returned from combine operator to StateFlow
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),//it will allow the StateFlow survive 5 seconds before it been canceled
+            initialValue = currentProductStream.value
+        )
+
+    fun onSearchTextChange(text: String) {
+        _searchText.value = text
+    }
+
+    fun onToggleSearch() {
+        _isSearching.value = !_isSearching.value
+        if (!_isSearching.value) {
+            onSearchTextChange("")
+        }
+    }
+
+
+
+
+
+
+
+
     fun resetCurrentJuice() = _currentJuiceStream.update { emptyProduct }
     fun updateCurrentJuice(product: Product) = _currentJuiceStream.update { product }
 
@@ -62,10 +118,11 @@ class JuiceTrackerViewModel(private val productRepository: ProductRepository) : 
     }
 
 //    fun checkAll(product: Product) = viewModelScope.launch {
-//        productDao.check(1)
+//
 //    }
 //
 //    fun uncheckAll(product: Product) = viewModelScope.launch {
 //        productDao.check(0)
 //    }
+
 }

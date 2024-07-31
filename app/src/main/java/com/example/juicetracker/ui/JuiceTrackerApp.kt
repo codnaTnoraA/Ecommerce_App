@@ -18,7 +18,6 @@ package com.example.juicetracker.ui
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -31,18 +30,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.juicetracker.R
 import com.example.juicetracker.ui.bottomsheet.EntryBottomSheet
-import com.example.juicetracker.ui.homescreen.AdBanner
 import com.example.juicetracker.ui.homescreen.AddProductButton
 import com.example.juicetracker.ui.homescreen.CheckAllUI
-import com.example.juicetracker.ui.homescreen.JuiceTrackerFAB
 import com.example.juicetracker.ui.homescreen.JuiceTrackerList
 import com.example.juicetracker.ui.homescreen.JuiceTrackerTopAppBar
-import com.example.juicetracker.ui.homescreen.search.SearchButton
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -83,6 +76,7 @@ fun JuiceTrackerApp(
             },
             bottomBar = {
                 Row(verticalAlignment = Alignment.CenterVertically) {
+
                     CheckAllUI()
 
 
@@ -91,6 +85,8 @@ fun JuiceTrackerApp(
                     AddProductButton(onClick = {juiceTrackerViewModel.resetCurrentJuice()
                         scope.launch { bottomSheetScaffoldState.bottomSheetState.expand() } }
                     )
+
+
                 }
             }
         ) { contentPadding ->

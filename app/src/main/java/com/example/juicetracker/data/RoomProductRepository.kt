@@ -15,18 +15,20 @@
  */
 package com.example.juicetracker.data
 
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
 import kotlinx.coroutines.flow.Flow
 
 /**
  * Implementation of [ProductRepository] interface
  * which allow access and modification of Juice items through [JuiceDao]
  */
-class RoomProductRepository(private val juiceDao: JuiceDao) : ProductRepository {
+class RoomProductRepository(override val juiceDao: JuiceDao) : ProductRepository {
     override val productStream: Flow<List<Product>> = juiceDao.getAll()
 
     override suspend fun addJuice(product: Product) = juiceDao.insert(product)
     override suspend fun deleteJuice(product: Product) = juiceDao.delete(product)
     override suspend fun updateJuice(product: Product) = juiceDao.update(product)
 
-
+    override suspend fun updateCheckState(product: Product, checkState: Boolean) = juiceDao.updateCheckState(checkState)
 }
