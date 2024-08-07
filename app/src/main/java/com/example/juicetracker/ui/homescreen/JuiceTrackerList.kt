@@ -30,25 +30,29 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.juicetracker.R
 import com.example.juicetracker.data.Product
+import com.example.juicetracker.ui.AppViewModelProvider
+import com.example.juicetracker.ui.JuiceTrackerViewModel
 
 @Composable
 fun JuiceTrackerList(
+    juiceTrackerViewModel: JuiceTrackerViewModel,
     products: List<Product>,
     onDelete: (Product) -> Unit,
     onUpdate: (Product) -> Unit,
     modifier: Modifier = Modifier
 ) {
+
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(vertical = dimensionResource(R.dimen.padding_small)),
@@ -71,21 +75,22 @@ fun JuiceTrackerList(
 
 @Composable
 fun JuiceTrackerListItem(
+    modifier: Modifier = Modifier,
     product: Product,
+    juiceTrackerViewModel: JuiceTrackerViewModel  = viewModel(factory = AppViewModelProvider.Factory),
     onDelete: (Product) -> Unit,
-    modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
 
-        var checkJuiceCheckedState = remember { mutableStateOf(product.checkState) }
+        val productID = product.id
 
         Checkbox(
             checked = (product.checkState),
             onCheckedChange = {
-                product.checkState = !product.checkState
+                juiceTrackerViewModel.updateCheckState(it, productID)
             } )
 
         JuiceDetails(product, Modifier.weight(1f))
@@ -122,4 +127,12 @@ fun DeleteButton(onDelete: () -> Unit, modifier: Modifier = Modifier) {
         )
 
     }
+}
+
+
+@Composable
+fun checkThing(juiceTrackerViewModel: JuiceTrackerViewModel  = viewModel(factory = AppViewModelProvider.Factory)) {
+    val juice by juiceTrackerViewModel.currentProductStream.collectAsState()
+
+    juiceTrackerViewModel.updateCurrentJuice(juice.copy(checkState = true))
 }

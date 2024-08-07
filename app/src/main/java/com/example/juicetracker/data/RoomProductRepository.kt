@@ -15,8 +15,6 @@
  */
 package com.example.juicetracker.data
 
-import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -30,5 +28,10 @@ class RoomProductRepository(override val juiceDao: JuiceDao) : ProductRepository
     override suspend fun deleteJuice(product: Product) = juiceDao.delete(product)
     override suspend fun updateJuice(product: Product) = juiceDao.update(product)
 
-    override suspend fun updateCheckState(product: Product, checkState: Boolean) = juiceDao.updateCheckState(checkState)
+    override suspend fun updateAllCheckState(product: Product, checkState: Boolean) = juiceDao.updateAllCheckState(checkState)
+
+    override suspend fun updateCheckState(product: Product, checkState: Boolean, productID: Long) {
+        super.updateCheckState(product, checkState, productID)
+        juiceDao.updateCheckState(checkState, productID)
+    }
 }

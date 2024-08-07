@@ -15,7 +15,6 @@
  */
 package com.example.juicetracker.data
 
-import androidx.compose.runtime.MutableState
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -41,6 +40,8 @@ interface JuiceDao {
     suspend fun update(product: Product)
 
     @Query("UPDATE product SET checkState=:checkState")
-    suspend fun updateCheckState(checkState: Boolean)
+    suspend fun updateAllCheckState(checkState: Boolean)
 
+    @Query("UPDATE product SET checkState=:checkState WHERE id=:productID")
+    suspend fun updateCheckState(checkState: Boolean, productID: Long)
 }

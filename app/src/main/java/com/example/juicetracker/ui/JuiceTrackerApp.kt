@@ -92,6 +92,7 @@ fun JuiceTrackerApp(
         ) { contentPadding ->
             Column(Modifier.padding(contentPadding)) {
                 JuiceTrackerList(
+                    juiceTrackerViewModel = juiceTrackerViewModel,
                     products = trackerState,
                     onDelete = { juice -> juiceTrackerViewModel.deleteJuice(juice) },
                     onUpdate = { juice ->

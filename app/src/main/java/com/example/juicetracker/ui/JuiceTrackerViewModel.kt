@@ -15,11 +15,6 @@
  */
 package com.example.juicetracker.ui
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.juicetracker.data.Product
@@ -31,7 +26,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -56,10 +50,12 @@ class JuiceTrackerViewModel(private val productRepository: ProductRepository) : 
     val productListStream: Flow<List<Product>> = productRepository.productStream
 
 
-    fun updateCheckState(checkState: Boolean) {
-        viewModelScope.launch { productRepository.updateCheckState(emptyProduct, checkState) }
+    fun updateAllCheckState(checkState: Boolean) {
+        viewModelScope.launch { productRepository.updateAllCheckState(emptyProduct, checkState) }
     }
-
+    fun updateCheckState(checkState: Boolean, productID: Long) {
+        viewModelScope.launch { productRepository.updateCheckState(emptyProduct, checkState, productID) }
+    }
 
 
     // Search ViewModel
@@ -116,13 +112,5 @@ class JuiceTrackerViewModel(private val productRepository: ProductRepository) : 
     fun deleteJuice(product: Product) = viewModelScope.launch {
         productRepository.deleteJuice(product)
     }
-
-//    fun checkAll(product: Product) = viewModelScope.launch {
-//
-//    }
-//
-//    fun uncheckAll(product: Product) = viewModelScope.launch {
-//        productDao.check(0)
-//    }
 
 }

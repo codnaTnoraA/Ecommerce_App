@@ -35,9 +35,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.juicetracker.R
 import com.example.juicetracker.data.JuiceColor
 import com.example.juicetracker.data.Product
+import com.example.juicetracker.ui.AppViewModelProvider
 import com.example.juicetracker.ui.JuiceTrackerViewModel
 import java.util.Locale
 
@@ -93,7 +95,7 @@ fun SheetForm(
     onUpdateJuice: (Product) -> Unit,
     onCancel: () -> Unit,
     onSubmit: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var subButtonEnabled by remember {
         mutableStateOf(false)
@@ -128,7 +130,6 @@ fun SheetForm(
             onValueChange = { maxPrice -> onUpdateJuice(product.copy(maxPrice = maxPrice.toFloat())) },
             modifier = Modifier.fillMaxWidth()
         )
-
         // Keyword field
         LastTextInputRow(
             inputLabel = "Keyword",
