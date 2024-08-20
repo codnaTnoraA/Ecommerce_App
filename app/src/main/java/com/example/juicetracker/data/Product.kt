@@ -41,6 +41,7 @@ data class Product(
     val maxPrice: Float?,
     val keyword: String,
     var checkState: Boolean,
+    var deleteState: Boolean
 )
 
 enum class JuiceColor(val color: Color, @StringRes val label: Int) {

@@ -15,6 +15,7 @@
  */
 package com.example.juicetracker.ui
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.juicetracker.data.Product
@@ -43,11 +44,15 @@ class JuiceTrackerViewModel(private val productRepository: ProductRepository) : 
         minPrice = 0.0f,
         maxPrice = 0.0f,
         keyword = "",
-        checkState = false
+        checkState = false,
+        deleteState = false
     )
     private val _currentJuiceStream = MutableStateFlow(emptyProduct)
     val currentProductStream: StateFlow<Product> = _currentJuiceStream
     val productListStream: Flow<List<Product>> = productRepository.productStream
+
+
+
 
 
     fun updateAllCheckState(checkState: Boolean) {
@@ -57,18 +62,36 @@ class JuiceTrackerViewModel(private val productRepository: ProductRepository) : 
         viewModelScope.launch { productRepository.updateCheckState(emptyProduct, checkState, productID) }
     }
 
+//    For deleting a single item
+    fun updateDeleteState(deleteState: Boolean, productID: Long) = viewModelScope.launch {
+        productRepository.updateDeleteState(
+            deleteState = deleteState,
+            product = emptyProduct,
+            productID = productID
+        )
+    }
+
+    fun falseDeleteState() = viewModelScope.launch {
+        productRepository.falseDeleteState(emptyProduct, false)
+    }
+
+
+
 
     // Search ViewModel
-    //first state whether the search is happening or not
-    private val _isSearching = MutableStateFlow(false)
-    val isSearching = _isSearching.asStateFlow()
-
-    //second state the text typed by the user
+    //state the text typed by the user
     private val _searchText = MutableStateFlow("")
+    fun onSearchTextChange(text: String) {
+        _searchText.value = text
+    }
+
+
     val searchText = _searchText.asStateFlow()
 
+    val productSearch: Flow<List<Product>> = productRepository.searchQuery(searchText.value) // TODO FIX THIS IDK WHY IT DOESN'T WORK
+
     val productsList = searchText
-        .combine(currentProductStream) { text, product ->//combine searchText with _contriesList
+        .combine(productListStream) { text, product ->//combine searchText with _contriesList
             if (text.isBlank()) { //return the entry list of product if not is typed
                 product
             } else {
@@ -77,19 +100,9 @@ class JuiceTrackerViewModel(private val productRepository: ProductRepository) : 
         }.stateIn(//basically convert the Flow returned from combine operator to StateFlow
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),//it will allow the StateFlow survive 5 seconds before it been canceled
-            initialValue = currentProductStream.value
+            initialValue = productListStream
         )
 
-    fun onSearchTextChange(text: String) {
-        _searchText.value = text
-    }
-
-    fun onToggleSearch() {
-        _isSearching.value = !_isSearching.value
-        if (!_isSearching.value) {
-            onSearchTextChange("")
-        }
-    }
 
 
 
@@ -109,8 +122,12 @@ class JuiceTrackerViewModel(private val productRepository: ProductRepository) : 
         }
     }
 
-    fun deleteJuice(product: Product) = viewModelScope.launch {
-        productRepository.deleteJuice(product)
+    fun deleteJuice() = viewModelScope.launch {
+        productRepository.deleteItem()
     }
 
+    val confirmDeleteState = mutableStateOf(false)
+    fun deleteProductConfirm(product: Product) = viewModelScope.launch {
+        confirmDeleteState.value = true
+    }
 }

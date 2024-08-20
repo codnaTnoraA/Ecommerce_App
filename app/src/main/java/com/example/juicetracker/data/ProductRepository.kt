@@ -27,7 +27,16 @@ interface ProductRepository {
     suspend fun addJuice(product: Product)
     suspend fun deleteJuice(product: Product)
     suspend fun updateJuice(product: Product)
+
+    val searchQuery: (String) -> Flow<List<Product>>
+        get() = { name: String -> juiceDao.searchQuery(name) }
+
     suspend fun updateAllCheckState(product: Product, checkState: Boolean)  = juiceDao.updateAllCheckState(checkState)
 
     suspend fun updateCheckState(product: Product, checkState: Boolean, productID: Long) = juiceDao.updateCheckState(checkState, productID)
+    suspend fun updateDeleteState(product: Product, deleteState: Boolean, productID: Long) = juiceDao.updateDeleteState(deleteState, productID)
+
+    suspend fun falseDeleteState(product: Product, deleteState: Boolean) = juiceDao.falseDeleteState(deleteState)
+
+    suspend fun deleteItem() = juiceDao.deleteItem()
 }

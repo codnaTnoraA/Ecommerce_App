@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.juicetracker.ui.AppViewModelProvider
 import com.example.juicetracker.ui.JuiceTrackerViewModel
+import com.example.juicetracker.ui.homescreen.JuiceTrackerList
 
 @SuppressLint("NotConstructor", "UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -23,19 +24,22 @@ fun SearchBarHomeScreen(
     juiceTrackerViewModel: JuiceTrackerViewModel = viewModel(factory = AppViewModelProvider.Factory)
 //    searchResults: List<Product>,
 ) {
-    //Collecting states from ViewModel
+    // Collecting states from ViewModel
     val searchText by juiceTrackerViewModel.searchText.collectAsState()
-    val isSearching by juiceTrackerViewModel.isSearching.collectAsState()
     val productsList by juiceTrackerViewModel.productsList.collectAsState()
 
 //    var text by rememberSaveable { mutableStateOf("") }
     //TODO FILL IN THE ColumnScope WITH THE SEARCH RESULTS
     SearchBar(
-        query = searchText,
+        query = searchText, // Search Query
         onQueryChange = juiceTrackerViewModel::onSearchTextChange,
-        onSearch = juiceTrackerViewModel::onSearchTextChange,
-        active = isSearching,
-        onActiveChange = { juiceTrackerViewModel.onToggleSearch() },
+        onSearch = {
+            // TODO Delete println()'s
+            println(juiceTrackerViewModel.productSearch.toString())
+            println(juiceTrackerViewModel.searchText.value)
+                   },
+        active = true,
+        onActiveChange = { },
         modifier = Modifier.fillMaxWidth(),
         placeholder = { Text(text = "Search") },
         tonalElevation = 1.dp,
@@ -43,8 +47,14 @@ fun SearchBarHomeScreen(
             BackButton(modifier = Modifier, onClick = exitFun)
         },
     ) {
+        val currentList by juiceTrackerViewModel.productSearch.collectAsState(emptyList())
         Column {
-            Text(text = "asasaas")
+            JuiceTrackerList(
+                juiceTrackerViewModel = juiceTrackerViewModel,
+                products = currentList,
+                onDelete = {},
+                onUpdate = {}
+            )
         }
     }
 }

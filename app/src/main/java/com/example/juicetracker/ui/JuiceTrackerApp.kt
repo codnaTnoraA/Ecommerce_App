@@ -36,6 +36,7 @@ import com.example.juicetracker.ui.homescreen.AddProductButton
 import com.example.juicetracker.ui.homescreen.CheckAllUI
 import com.example.juicetracker.ui.homescreen.JuiceTrackerList
 import com.example.juicetracker.ui.homescreen.JuiceTrackerTopAppBar
+import com.example.juicetracker.ui.homescreen.confirmDialogBox.ConfirmDeleteDialogBox
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,6 +71,25 @@ fun JuiceTrackerApp(
             }
         }
     ) {
+//        Delete Confirmation function
+        val openDeleteAlertDialog = juiceTrackerViewModel.confirmDeleteState
+
+        when {
+            // ...
+            openDeleteAlertDialog.value -> {
+                ConfirmDeleteDialogBox(
+                    onDismissRequest = {
+                        openDeleteAlertDialog.value = false
+                        juiceTrackerViewModel.falseDeleteState()
+                    },
+                    onConfirmation = {
+                        openDeleteAlertDialog.value = false
+                        juiceTrackerViewModel.deleteJuice()
+                    }
+                )
+            }
+        }
+
         Scaffold(
             topBar = {
                 JuiceTrackerTopAppBar()
@@ -94,7 +114,7 @@ fun JuiceTrackerApp(
                 JuiceTrackerList(
                     juiceTrackerViewModel = juiceTrackerViewModel,
                     products = trackerState,
-                    onDelete = { juice -> juiceTrackerViewModel.deleteJuice(juice) },
+                    onDelete = { juice -> juiceTrackerViewModel.deleteProductConfirm(juice) },
                     onUpdate = { juice ->
                         juiceTrackerViewModel.updateCurrentJuice(juice)
                         scope.launch {

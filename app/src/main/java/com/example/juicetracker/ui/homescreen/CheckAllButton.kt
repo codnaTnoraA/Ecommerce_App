@@ -1,9 +1,13 @@
 package com.example.juicetracker.ui.homescreen
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import androidx.compose.foundation.layout.Row
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -57,6 +61,7 @@ fun CheckAllText(modifier: Modifier? = Modifier) {
     Text(text = "Check All", fontSize = 15.sp)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CheckAllUI() {
     Row(verticalAlignment = Alignment.CenterVertically) {

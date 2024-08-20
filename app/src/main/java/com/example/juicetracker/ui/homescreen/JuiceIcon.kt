@@ -51,9 +51,3 @@ fun JuiceIcon(color: String, modifier: Modifier = Modifier) {
         Icon(painter = painterResource(R.drawable.juice_clear_icon), contentDescription = null)
     }
 }
-
-@Preview
-@Composable
-fun Prev() {
-    JuiceIcon(color = "Red")
-}

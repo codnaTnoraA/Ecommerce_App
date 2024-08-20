@@ -119,7 +119,11 @@ fun SheetForm(
         IntInputRow(
             inputLabel = "Minimum Price",
             fieldValue = product.minPrice.toString(),
-            onValueChange = { minPrice -> onUpdateJuice(product.copy(minPrice = minPrice.toFloat())) },
+            onValueChange = { minPrice ->
+                if (minPrice.toFloat() <= 99999) {
+                    onUpdateJuice(product.copy(minPrice = minPrice.toFloat()))
+                }
+            },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -127,7 +131,12 @@ fun SheetForm(
         IntInputRow(
             inputLabel = "Maximum Price",
             fieldValue = product.maxPrice.toString(),
-            onValueChange = { maxPrice -> onUpdateJuice(product.copy(maxPrice = maxPrice.toFloat())) },
+            onValueChange = { maxPrice ->
+                if (maxPrice.toFloat() <= 99999) {
+                    onUpdateJuice(product.copy(maxPrice = maxPrice.toFloat()))
+                }
+
+            },
             modifier = Modifier.fillMaxWidth()
         )
         // Keyword field
@@ -142,11 +151,7 @@ fun SheetForm(
         Text(text = "Note: Price will be based on your keyword")
 
 //      logic for making sure minPrice < maxPrice
-        if (product.minPrice!! < product.maxPrice!! && product.name.isNotEmpty()) {
-            subButtonEnabled = true
-        } else {
-            subButtonEnabled = false
-        }
+        subButtonEnabled = product.minPrice!! < product.maxPrice!! && product.name.isNotEmpty()
 
         ButtonRow(
             modifier = Modifier

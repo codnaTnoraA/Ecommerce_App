@@ -24,11 +24,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -96,6 +98,7 @@ fun JuiceTrackerListItem(
         JuiceDetails(product, Modifier.weight(1f))
         DeleteButton(
             onDelete = {
+                juiceTrackerViewModel.updateDeleteState(true, productID)
                 onDelete(product)
             },
             modifier = Modifier.align(Alignment.Top)
@@ -125,14 +128,5 @@ fun DeleteButton(onDelete: () -> Unit, modifier: Modifier = Modifier) {
             painter = painterResource(R.drawable.delete_icon),
             contentDescription = stringResource(R.string.delete)
         )
-
     }
-}
-
-
-@Composable
-fun checkThing(juiceTrackerViewModel: JuiceTrackerViewModel  = viewModel(factory = AppViewModelProvider.Factory)) {
-    val juice by juiceTrackerViewModel.currentProductStream.collectAsState()
-
-    juiceTrackerViewModel.updateCurrentJuice(juice.copy(checkState = true))
 }

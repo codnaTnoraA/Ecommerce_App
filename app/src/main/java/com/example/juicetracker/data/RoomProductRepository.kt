@@ -34,4 +34,18 @@ class RoomProductRepository(override val juiceDao: JuiceDao) : ProductRepository
         super.updateCheckState(product, checkState, productID)
         juiceDao.updateCheckState(checkState, productID)
     }
+
+    override suspend fun updateDeleteState(product: Product, deleteState: Boolean, productID: Long) {
+        super.updateDeleteState(product, deleteState, productID)
+        juiceDao.updateDeleteState(deleteState, productID)
+    }
+
+    override suspend fun falseDeleteState(product: Product, deleteState: Boolean) {
+        super.falseDeleteState(product, deleteState)
+        juiceDao.falseDeleteState()
+    }
+
+    override suspend fun deleteItem() {
+        juiceDao.deleteItem()
+    }
 }
