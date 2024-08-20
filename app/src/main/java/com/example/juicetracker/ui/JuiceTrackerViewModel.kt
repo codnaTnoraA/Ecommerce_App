@@ -55,6 +55,7 @@ class JuiceTrackerViewModel(private val productRepository: ProductRepository) : 
 
 
 
+
     fun updateAllCheckState(checkState: Boolean) {
         viewModelScope.launch { productRepository.updateAllCheckState(emptyProduct, checkState) }
     }
