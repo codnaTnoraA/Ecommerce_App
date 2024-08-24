@@ -1,32 +1,18 @@
-/*
- * Copyright (C) 2023 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.example.juicetracker.ui
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.juicetracker.data.Product
 import com.example.juicetracker.data.JuiceColor
+import com.example.juicetracker.data.Product
 import com.example.juicetracker.data.ProductRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -86,28 +72,12 @@ class JuiceTrackerViewModel(private val productRepository: ProductRepository) : 
         _searchText.value = text
     }
 
-
     val searchText = _searchText.asStateFlow()
 
-    val productSearch: Flow<List<Product>> = productRepository.searchQuery(searchText.value) // TODO FIX THIS IDK WHY IT DOESN'T WORK
-
-    val productsList = searchText
-        .combine(productListStream) { text, product ->//combine searchText with _contriesList
-            if (text.isBlank()) { //return the entry list of product if not is typed
-                product
-            } else {
-                product
-            }
-        }.stateIn(//basically convert the Flow returned from combine operator to StateFlow
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),//it will allow the StateFlow survive 5 seconds before it been canceled
-            initialValue = productListStream
-        )
-
-
-
-
-
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val searchResults: StateFlow<List<Product>> = _searchText
+        .flatMapLatest { query -> productRepository.searchProducts(query) }
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
 
 
