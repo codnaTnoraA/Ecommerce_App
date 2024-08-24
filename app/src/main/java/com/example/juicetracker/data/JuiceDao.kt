@@ -3,6 +3,7 @@ package com.example.juicetracker.data
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
@@ -15,8 +16,20 @@ interface JuiceDao {
     @Query("SELECT * FROM product")
     fun getAll(): Flow<List<Product>>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(product: Product)
+
+    @Query("SELECT * FROM product WHERE name = :name")
+    suspend fun getItemByName(name: String): Product?
+
+    suspend fun insertItemIfNotExists(product: Product): Boolean {
+        if (getItemByName(product.name) == null) {
+            return true
+        } else {
+            return false
+            // Handle the case where the item already exists (e.g., show a message)
+        }
+    }
 
     @Delete
     suspend fun delete(product: Product)

@@ -3,6 +3,7 @@ package com.example.juicetracker.data
 import androidx.annotation.StringRes
 import androidx.compose.ui.graphics.Color
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.example.juicetracker.R
 import com.example.juicetracker.ui.theme.Orange as OrangeColor
@@ -14,7 +15,9 @@ import com.example.juicetracker.ui.theme.Orange as OrangeColor
  * Please remove app and re-install if existing app from the Main branch exist
  * to avoid database error
  */
-@Entity
+@Entity(
+    indices = [Index(value = ["name"], unique = true)]
+)
 data class Product(
     @PrimaryKey(autoGenerate = true)
     val id: Long,

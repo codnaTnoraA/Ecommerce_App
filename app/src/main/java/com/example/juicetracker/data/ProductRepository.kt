@@ -18,6 +18,10 @@ interface ProductRepository {
         return juiceDao.searchQuery(searchQuery)
     }
 
+    suspend fun duplicateItemTrueFalse(product: Product): Boolean {
+        return juiceDao.insertItemIfNotExists(product)
+    }
+
     suspend fun updateAllCheckState(product: Product, checkState: Boolean)  = juiceDao.updateAllCheckState(checkState)
 
     suspend fun updateCheckState(product: Product, checkState: Boolean, productID: Long) = juiceDao.updateCheckState(checkState, productID)

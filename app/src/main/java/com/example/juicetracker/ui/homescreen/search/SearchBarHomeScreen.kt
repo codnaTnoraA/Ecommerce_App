@@ -20,6 +20,7 @@ import com.example.juicetracker.ui.AppViewModelProvider
 import com.example.juicetracker.ui.JuiceTrackerViewModel
 import com.example.juicetracker.ui.bottomsheet.EntryBottomSheet
 import com.example.juicetracker.ui.homescreen.JuiceTrackerList
+import com.example.juicetracker.ui.homescreen.confirmDialogBox.ConfirmDeleteDialogBox
 import kotlinx.coroutines.launch
 
 @SuppressLint("NotConstructor", "UnusedMaterial3ScaffoldPaddingParameter")
@@ -72,6 +73,23 @@ fun SearchBarHomeScreen(
                 }
             }
         ) {
+            val openDeleteAlertDialog = juiceTrackerViewModel.confirmDeleteState
+            when {
+                // ...
+                openDeleteAlertDialog.value -> {
+                    ConfirmDeleteDialogBox(
+                        onDismissRequest = {
+                            openDeleteAlertDialog.value = false
+                            juiceTrackerViewModel.falseDeleteState()
+                        },
+                        onConfirmation = {
+                            openDeleteAlertDialog.value = false
+                            juiceTrackerViewModel.deleteJuice()
+                        }
+                    )
+                }
+            }
+
             val list by juiceTrackerViewModel.searchResults.collectAsState()
 
             Column {

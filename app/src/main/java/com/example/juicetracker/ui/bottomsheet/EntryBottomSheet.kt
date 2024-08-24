@@ -39,8 +39,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.juicetracker.R
 import com.example.juicetracker.data.JuiceColor
 import com.example.juicetracker.data.Product
+import com.example.juicetracker.data.ProductRepository
 import com.example.juicetracker.ui.AppViewModelProvider
 import com.example.juicetracker.ui.JuiceTrackerViewModel
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -150,8 +153,14 @@ fun SheetForm(
         
         Text(text = "Note: Price will be based on your keyword")
 
+        val juiceTrackerViewModel: JuiceTrackerViewModel = viewModel(factory = AppViewModelProvider.Factory)
+
+
+
+
 //      logic for making sure minPrice < maxPrice
-        subButtonEnabled = product.minPrice!! < product.maxPrice!! && product.name.isNotEmpty()
+        subButtonEnabled = product.minPrice!! < product.maxPrice!!
+                && product.name.isNotEmpty()
 
         ButtonRow(
             modifier = Modifier

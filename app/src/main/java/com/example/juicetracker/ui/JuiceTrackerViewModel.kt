@@ -1,12 +1,18 @@
 package com.example.juicetracker.ui
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.juicetracker.data.JuiceColor
 import com.example.juicetracker.data.Product
 import com.example.juicetracker.data.ProductRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -48,6 +54,14 @@ class JuiceTrackerViewModel(private val productRepository: ProductRepository) : 
     fun updateCheckState(checkState: Boolean, productID: Long) {
         viewModelScope.launch { productRepository.updateCheckState(emptyProduct, checkState, productID) }
     }
+
+
+//    TODO FIX THIS FUNCTIONALITY TO PREVENT DUPLICATES WHEN ADDING PRODUCTS (Product.name won't repeat)
+    suspend fun itemDuplicateTrueFalse(product: Product): Boolean {
+        return productRepository.duplicateItemTrueFalse(product)
+    }
+
+
 
 //    For deleting a single item
     fun updateDeleteState(deleteState: Boolean, productID: Long) = viewModelScope.launch {
