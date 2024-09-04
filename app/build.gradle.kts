@@ -17,6 +17,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp") version "1.9.0-1.0.13"
+    id("com.chaquo.python")
 }
 
 android {
@@ -33,6 +34,11 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
+        }
+
+        ndk {
+            // On Apple silicon, you can omit x86_64.
+            abiFilters += listOf("arm64-v8a", "x86_64")
         }
     }
 
@@ -63,6 +69,30 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    flavorDimensions += "pyVersion"
+    productFlavors {
+        create("py310") { dimension = "pyVersion" }
+        create("py311") { dimension = "pyVersion" }
+    }
+}
+
+chaquopy {
+    defaultConfig {
+        version = "3.8"
+    }
+
+    sourceSets {
+        getByName("main") {
+            srcDir("src/main/python")
+            srcDir("src/main/java/com/example/juicetracker/python")
+        }
+    }
+
+    productFlavors {
+        getByName("py310") { version = "3.10" }
+        getByName("py311") { version = "3.11" }
+    }
 }
 
 dependencies {
@@ -86,4 +116,13 @@ dependencies {
 
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     debugImplementation("androidx.compose.ui:ui-tooling")
+
+
+// idk
+    implementation("com.android.volley:volley:1.2.1")
+    implementation("com.google.code.gson:gson:2.8.9")
+
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
 }
