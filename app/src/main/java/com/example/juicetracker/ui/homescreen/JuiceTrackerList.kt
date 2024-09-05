@@ -26,6 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.chaquo.python.Python
 import com.example.juicetracker.R
 import com.example.juicetracker.data.Product
 import com.example.juicetracker.ui.AppViewModelProvider
@@ -93,6 +94,13 @@ fun JuiceTrackerListItem(
 
 @Composable
 fun JuiceDetails(product: Product, modifier: Modifier = Modifier) {
+    val py = Python.getInstance()
+    val testPrint = py.getModule("testPrint")
+    val actualTest = testPrint["testFun"]
+
+    // TODO Temporarily fixed the problem. Fix the requests import
+    val jsonMsg = actualTest?.call(product.keyword).toString()
+
     Column(modifier, verticalArrangement = Arrangement.Top) {
         Text(
             text = product.name,
@@ -100,6 +108,7 @@ fun JuiceDetails(product: Product, modifier: Modifier = Modifier) {
         )
         Text("Minimum Price : ₱${product.minPrice.toString()} ")
         Text("Maximum Price : ₱${product.maxPrice.toString()} ")
+        Text(text = jsonMsg)
     }
 }
 

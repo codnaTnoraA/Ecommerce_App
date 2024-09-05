@@ -72,26 +72,28 @@ android {
 
     flavorDimensions += "pyVersion"
     productFlavors {
-        create("py310") { dimension = "pyVersion" }
-        create("py311") { dimension = "pyVersion" }
+//        create("py310") { dimension = "pyVersion" }
+//        create("py311") { dimension = "pyVersion" }
     }
 }
 
 chaquopy {
     defaultConfig {
         version = "3.8"
+        pip {
+            install("requests")
+        }
     }
 
     sourceSets {
         getByName("main") {
-            srcDir("src/main/python")
             srcDir("src/main/java/com/example/juicetracker/python")
         }
     }
 
     productFlavors {
-        getByName("py310") { version = "3.10" }
-        getByName("py311") { version = "3.11" }
+//        getByName("py310") { version = "3.10" }
+//        getByName("py311") { version = "3.11" }
     }
 }
 

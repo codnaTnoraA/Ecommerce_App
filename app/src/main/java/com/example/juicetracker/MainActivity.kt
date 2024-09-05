@@ -17,12 +17,6 @@ class MainActivity : ComponentActivity() {
                 Python.start(AndroidPlatform(this));
             }
             JuiceTrackerApp()
-
-            val py = Python.getInstance()
-            val testPrint = py.getModule("testPrint")
-            val actualTest = testPrint["testFun"]
-
-            println(actualTest?.call().toString())
         }
     }
 }

@@ -151,7 +151,8 @@ fun SheetForm(
             placeholderText = "Keyword"
         )
         
-        Text(text = "Note: Price will be based on your keyword")
+        Text(text = "Note: Price will be based on your keyword. \n" +
+                "To get price info, use Google Finance to find the ticker symbol of the company. Example: AAPL = Apple Inc")
 
         val juiceTrackerViewModel: JuiceTrackerViewModel = viewModel(factory = AppViewModelProvider.Factory)
 
