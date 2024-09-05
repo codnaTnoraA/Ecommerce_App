@@ -1,6 +1,5 @@
 import requests
 
-
 api_key = 'JIML76KK9ZBXIRG5'
 api_key2 = "4Z0OQMUSDS4UJ7GU"
 
