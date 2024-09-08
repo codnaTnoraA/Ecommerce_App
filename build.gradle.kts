@@ -19,6 +19,9 @@ buildscript {
         set("lifecycle_version", "2.6.1")
         set("room_version", "2.5.2")
     }
+    repositories {
+        google()
+    }
 }
 plugins {
     id("com.android.application") version "8.3.1" apply false

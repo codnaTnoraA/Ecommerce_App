@@ -9,16 +9,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -34,7 +30,7 @@ import com.example.juicetracker.ui.JuiceTrackerViewModel
 
 @Composable
 fun JuiceTrackerList(
-    juiceTrackerViewModel: JuiceTrackerViewModel,
+//    juiceTrackerViewModel: JuiceTrackerViewModel,
     products: List<Product>,
     onDelete: (Product) -> Unit,
     onUpdate: (Product) -> Unit,
@@ -94,12 +90,12 @@ fun JuiceTrackerListItem(
 
 @Composable
 fun JuiceDetails(product: Product, modifier: Modifier = Modifier) {
-    val py = Python.getInstance()
-    val testPrint = py.getModule("testPrint")
-    val actualTest = testPrint["testFun"]
+//    val py = Python.getInstance()
+//    val testPrint = py.getModule("testPrint")
+//    val actualTest = testPrint["testFun"]
 
     // TODO Temporarily fixed the problem. Fix the requests import
-    val jsonMsg = actualTest?.call(product.keyword).toString()
+//    val jsonMsg = actualTest?.call(product.keyword).toString()
 
     Column(modifier, verticalArrangement = Arrangement.Top) {
         Text(
@@ -108,7 +104,7 @@ fun JuiceDetails(product: Product, modifier: Modifier = Modifier) {
         )
         Text("Minimum Price : ₱${product.minPrice.toString()} ")
         Text("Maximum Price : ₱${product.maxPrice.toString()} ")
-        Text(text = jsonMsg)
+//        Text(text = jsonMsg)
     }
 }
 

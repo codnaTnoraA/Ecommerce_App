@@ -94,7 +94,7 @@ fun SearchBarHomeScreen(
 
             Column {
                 JuiceTrackerList(
-                    juiceTrackerViewModel = juiceTrackerViewModel,
+//                    juiceTrackerViewModel = juiceTrackerViewModel,
                     products = list,
                     onDelete = { product -> juiceTrackerViewModel.deleteProductConfirm(product) },
                     onUpdate = { juice ->
