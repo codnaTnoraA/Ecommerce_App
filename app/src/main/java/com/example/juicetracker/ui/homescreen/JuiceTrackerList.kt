@@ -90,12 +90,12 @@ fun JuiceTrackerListItem(
 
 @Composable
 fun JuiceDetails(product: Product, modifier: Modifier = Modifier) {
-//    val py = Python.getInstance()
-//    val testPrint = py.getModule("testPrint")
-//    val actualTest = testPrint["testFun"]
+    val py = Python.getInstance()
+    val testPrint = py.getModule("testPrint")
+    val actualTest = testPrint["testFun"]
 
     // TODO Temporarily fixed the problem. Fix the requests import
-//    val jsonMsg = actualTest?.call(product.keyword).toString()
+    val jsonMsg = actualTest?.call(product.keyword).toString()
 
     Column(modifier, verticalArrangement = Arrangement.Top) {
         Text(
@@ -104,7 +104,7 @@ fun JuiceDetails(product: Product, modifier: Modifier = Modifier) {
         )
         Text("Minimum Price : ₱${product.minPrice.toString()} ")
         Text("Maximum Price : ₱${product.maxPrice.toString()} ")
-//        Text(text = jsonMsg)
+        Text(text = jsonMsg)
     }
 }
 

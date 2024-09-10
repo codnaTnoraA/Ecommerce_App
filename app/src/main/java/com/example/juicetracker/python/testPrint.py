@@ -15,5 +15,5 @@ def testFun(keyword):
             return "No data found"
         else:
             return data
-    finally:
+    except:
         return "No Internet. Cannot retrieve data"
