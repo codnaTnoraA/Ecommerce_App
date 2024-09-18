@@ -92,10 +92,13 @@ fun JuiceTrackerListItem(
 fun JuiceDetails(product: Product, modifier: Modifier = Modifier) {
     val py = Python.getInstance()
     val testPrint = py.getModule("testPrint")
-    val actualTest = testPrint["testFun"]
+    val getUSDStock = testPrint["testFun"]
+    val getPHPStock = testPrint["usd_to_php"]
+    val _day = testPrint["get_yesterday"]
 
-    // TODO Temporarily fixed the problem. Fix the requests import
-    val jsonMsg = actualTest?.call(product.keyword).toString()
+    val usdStock = getUSDStock?.call(product.keyword).toString()
+//    val phpStock = getPHPStock?.call(usdStock.toFloat()).toString()
+    val day = _day?.call().toString()
 
     Column(modifier, verticalArrangement = Arrangement.Top) {
         Text(
@@ -104,7 +107,8 @@ fun JuiceDetails(product: Product, modifier: Modifier = Modifier) {
         )
         Text("Minimum Price : ₱${product.minPrice.toString()} ")
         Text("Maximum Price : ₱${product.maxPrice.toString()} ")
-        Text(text = jsonMsg)
+        Text(text = "\n Market price as of ${day}:")
+        Text("$${usdStock}", fontWeight = FontWeight.Bold) // It uses data from yesterday as data is sourced from the US which is behind in time.
     }
 }
 

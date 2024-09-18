@@ -82,6 +82,7 @@ chaquopy {
         version = "3.8"
         pip {
             install("requests")
+            install("CurrencyConverter")
         }
     }
 
