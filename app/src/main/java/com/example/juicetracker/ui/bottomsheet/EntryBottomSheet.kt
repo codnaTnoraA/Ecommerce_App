@@ -23,7 +23,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,18 +31,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.juicetracker.R
 import com.example.juicetracker.data.JuiceColor
 import com.example.juicetracker.data.Product
-import com.example.juicetracker.data.ProductRepository
 import com.example.juicetracker.ui.AppViewModelProvider
 import com.example.juicetracker.ui.JuiceTrackerViewModel
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,21 +52,44 @@ fun EntryBottomSheet(
 ) {
     val juice by juiceTrackerViewModel.currentProductStream.collectAsState()
 
+    val testCheckList by juiceTrackerViewModel.testCheckList.collectAsState(emptyList())
+
     BottomSheetScaffold(
         modifier = modifier,
         scaffoldState = sheetScaffoldState,
         sheetContent = {
-            Column {
-                SheetHeader(Modifier.padding(dimensionResource(R.dimen.padding_small)))
-                SheetForm(
-                    product = juice,
-                    onUpdateJuice = juiceTrackerViewModel::updateCurrentJuice,
-                    onCancel = onCancel,
-                    onSubmit = onSubmit,
-                    modifier = Modifier.padding(
-                        horizontal = dimensionResource(R.dimen.padding_medium)
+            if (juiceTrackerViewModel.editButtonState.value) {
+                Column {
+                    SheetHeader(
+                        Modifier.padding(dimensionResource(R.dimen.padding_small)),
+                        textHeader = "Edit Price"
                     )
-                )
+                    SheetFormEditPrice(
+                        product = juice,
+                        onUpdateJuice = juiceTrackerViewModel::updateCurrentJuice,
+                        onCancel = onCancel,
+                        onSubmit = onSubmit,
+                        modifier = Modifier.padding(
+                            horizontal = dimensionResource(R.dimen.padding_medium)
+                        )
+                    )
+                }
+            } else {
+                Column {
+                    SheetHeader(
+                        Modifier.padding(dimensionResource(R.dimen.padding_small)),
+                        textHeader = "Add Product"
+                    )
+                    SheetFormAddProduct(
+                        product = juice,
+                        onUpdateJuice = juiceTrackerViewModel::updateCurrentJuice,
+                        onCancel = onCancel,
+                        onSubmit = onSubmit,
+                        modifier = Modifier.padding(
+                            horizontal = dimensionResource(R.dimen.padding_medium)
+                        )
+                    )
+                }
             }
         }
     ) {
@@ -81,11 +98,14 @@ fun EntryBottomSheet(
 }
 
 @Composable
-fun SheetHeader(modifier: Modifier = Modifier) {
+fun SheetHeader(
+    modifier: Modifier = Modifier,
+    textHeader: String
+) {
     Column(modifier = modifier) {
         Text(
             modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)),
-            text = stringResource(R.string.bottom_sheet_headline),
+            text = textHeader,
             style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
         )
         Divider()
@@ -93,7 +113,63 @@ fun SheetHeader(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun SheetForm(
+fun SheetFormEditPrice(
+    product: Product,
+    onUpdateJuice: (Product) -> Unit,
+    onCancel: () -> Unit,
+    onSubmit: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    var subButtonEnabled by remember {
+        mutableStateOf(false)
+    }
+
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        // Minimum Price field
+        IntInputRow(
+            inputLabel = "Minimum Price",
+            fieldValue = product.minPrice.toString(),
+            onValueChange = { minPrice ->
+                if (minPrice.toFloat() <= 99999) {
+                    onUpdateJuice(product.copy(minPrice = minPrice.toFloat()))
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        // Maximum Price field
+        IntInputRow(
+            inputLabel = "Maximum Price",
+            fieldValue = product.maxPrice.toString(),
+            onValueChange = { maxPrice ->
+                if (maxPrice.toFloat() <= 99999) {
+                    onUpdateJuice(product.copy(maxPrice = maxPrice.toFloat()))
+                }
+
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+//      logic for making sure minPrice < maxPrice
+        subButtonEnabled = product.minPrice!! < product.maxPrice!!
+                && product.name.isNotEmpty()
+
+        ButtonRow(
+            modifier = Modifier
+                .align(Alignment.End)
+                .padding(bottom = dimensionResource(R.dimen.padding_medium)),
+            onCancel = onCancel,
+            onSubmit = onSubmit,
+            submitButtonEnabled = subButtonEnabled
+        )
+
+    }
+}
+
+@Composable
+fun SheetFormAddProduct(
     product: Product,
     onUpdateJuice: (Product) -> Unit,
     onCancel: () -> Unit,

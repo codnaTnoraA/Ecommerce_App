@@ -19,7 +19,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.juicetracker.ui.bottomsheet.EditBottomSheet
 import com.example.juicetracker.ui.bottomsheet.EntryBottomSheet
 import com.example.juicetracker.ui.homescreen.AddProductButton
 import com.example.juicetracker.ui.homescreen.CheckAllUI
@@ -36,13 +35,6 @@ fun JuiceTrackerApp(
 ) {
 
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = rememberStandardBottomSheetState(
-            initialValue = SheetValue.Hidden,
-            skipHiddenState = false,
-        )
-    )
-
-    val editScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberStandardBottomSheetState(
             initialValue = SheetValue.Hidden,
             skipHiddenState = false,
@@ -103,16 +95,18 @@ fun JuiceTrackerApp(
                     if (testCheckList.contains(true)) {
 //                        TODO add function to button
                         EditPriceButton {
+                            juiceTrackerViewModel.editButtonState.value = true
                             scope.launch { bottomSheetScaffoldState.bottomSheetState.expand() }
                         }
                     } else {
-                        AddProductButton(onClick = {juiceTrackerViewModel.resetCurrentJuice()
-                            scope.launch { bottomSheetScaffoldState.bottomSheetState.expand() } }
+                        AddProductButton(
+                            onClick = {
+                                juiceTrackerViewModel.editButtonState.value = false
+                                juiceTrackerViewModel.resetCurrentJuice()
+                                scope.launch { bottomSheetScaffoldState.bottomSheetState.expand() }
+                            }
                         )
                     }
-                    
-
-
                 }
             }
         ) { contentPadding ->
