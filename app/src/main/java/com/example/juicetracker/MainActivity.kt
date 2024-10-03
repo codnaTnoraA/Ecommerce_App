@@ -3,9 +3,12 @@ package com.example.juicetracker
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chaquo.python.Python
 import com.chaquo.python.android.AndroidPlatform
+import com.example.juicetracker.ui.AppViewModelProvider
 import com.example.juicetracker.ui.JuiceTrackerApp
+import com.example.juicetracker.ui.JuiceTrackerViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,6 +17,10 @@ class MainActivity : ComponentActivity() {
             if (! Python.isStarted()) {
                 Python.start(AndroidPlatform(this))
             }
+
+            val productViewModel: JuiceTrackerViewModel = viewModel(factory = AppViewModelProvider.Factory)
+            productViewModel.updateAllCheckState(false)
+
             JuiceTrackerApp()
         }
     }

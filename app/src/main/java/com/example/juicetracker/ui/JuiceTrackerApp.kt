@@ -8,6 +8,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetValue
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
@@ -98,10 +99,18 @@ fun JuiceTrackerApp(
                     CheckAllUI()
 
                     Spacer(modifier = Modifier.weight(1f))
+                    if (testCheckList.contains(true)) {
 
-                    AddProductButton(onClick = {juiceTrackerViewModel.resetCurrentJuice()
-                        scope.launch { bottomSheetScaffoldState.bottomSheetState.expand() } }
-                    )
+//                        TODO add function to button
+                        Button(onClick = { /*TODO*/ }) {
+                            Text(text = "Edit Price")
+                        }
+                    } else {
+                        AddProductButton(onClick = {juiceTrackerViewModel.resetCurrentJuice()
+                            scope.launch { bottomSheetScaffoldState.bottomSheetState.expand() } }
+                        )
+                    }
+                    
 
 
                 }

@@ -3,26 +3,31 @@ package com.example.juicetracker
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chaquo.python.Python
 import com.chaquo.python.android.AndroidPlatform
+import com.example.juicetracker.ui.AppViewModelProvider
+import com.example.juicetracker.ui.JuiceTrackerViewModel
 import com.example.juicetracker.ui.homescreen.search.SearchBarHomeScreen
-import com.example.juicetracker.ui.theme.JuiceTrackerTheme
 
 class SearchActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             if (! Python.isStarted()) {
-                Python.start(AndroidPlatform(this));
+                Python.start(AndroidPlatform(this))
             }
-            SearchBarHomeScreen( { finish() } )
+
+            val productViewModel: JuiceTrackerViewModel = viewModel(factory = AppViewModelProvider.Factory)
+            productViewModel.updateAllCheckState(false)
+
+            SearchBarHomeScreen(
+                {
+                    finish()
+                    productViewModel.updateAllCheckState(false)
+                }
+            )
+
         }
     }
 
