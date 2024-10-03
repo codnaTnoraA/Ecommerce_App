@@ -13,7 +13,7 @@ class AddProductButton
 @Composable
 fun AddProductButton(
     onClick: () -> Unit,
-    modifier: Modifier? = Modifier
+//    modifier: Modifier? = Modifier
 ) {
     Button(
         onClick = { onClick() },
@@ -21,5 +21,19 @@ fun AddProductButton(
         colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
     ) {
         Text(text = "Add Product")
+    }
+}
+
+@Composable
+fun EditPriceButton(
+    onClick: () -> Unit,
+//    modifier: Modifier? = Modifier
+) {
+    Button(
+        onClick = { onClick() },
+        shape = RectangleShape,
+        colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+    ) {
+        Text(text = "Edit Price")
     }
 }

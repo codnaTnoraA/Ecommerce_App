@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -22,6 +23,7 @@ import com.example.juicetracker.ui.bottomsheet.EditBottomSheet
 import com.example.juicetracker.ui.bottomsheet.EntryBottomSheet
 import com.example.juicetracker.ui.homescreen.AddProductButton
 import com.example.juicetracker.ui.homescreen.CheckAllUI
+import com.example.juicetracker.ui.homescreen.EditPriceButton
 import com.example.juicetracker.ui.homescreen.JuiceTrackerList
 import com.example.juicetracker.ui.homescreen.JuiceTrackerTopAppBar
 import com.example.juicetracker.ui.homescreen.confirmDialogBox.ConfirmDeleteDialogBox
@@ -40,20 +42,19 @@ fun JuiceTrackerApp(
         )
     )
 
+    val editScaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = rememberStandardBottomSheetState(
+            initialValue = SheetValue.Hidden,
+            skipHiddenState = false,
+        )
+    )
+
     val scope = rememberCoroutineScope()
     val trackerState by juiceTrackerViewModel.productListStream.collectAsState(emptyList())
 
     val testCheckList by juiceTrackerViewModel.testCheckList.collectAsState(emptyList())
 
-    EditBottomSheet(editScaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = rememberStandardBottomSheetState(
-            initialValue = SheetValue.Expanded,
-            skipHiddenState = true,
-        )
-        )
-    ) {
 
-    }
 
     EntryBottomSheet(
         juiceTrackerViewModel = juiceTrackerViewModel,
@@ -100,10 +101,9 @@ fun JuiceTrackerApp(
 
                     Spacer(modifier = Modifier.weight(1f))
                     if (testCheckList.contains(true)) {
-
 //                        TODO add function to button
-                        Button(onClick = { /*TODO*/ }) {
-                            Text(text = "Edit Price")
+                        EditPriceButton {
+                            scope.launch { bottomSheetScaffoldState.bottomSheetState.expand() }
                         }
                     } else {
                         AddProductButton(onClick = {juiceTrackerViewModel.resetCurrentJuice()
