@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.Flow
 class RoomProductRepository(override val juiceDao: JuiceDao) : ProductRepository {
     override val productStream: Flow<List<Product>> = juiceDao.getAll()
 
+    override fun getCheckList(): Flow<List<Boolean>> = juiceDao.getCheckList()
+
     override suspend fun addJuice(product: Product) = juiceDao.insert(product)
     override suspend fun deleteJuice(product: Product) = juiceDao.delete(product)
     override suspend fun updateJuice(product: Product) = juiceDao.update(product)

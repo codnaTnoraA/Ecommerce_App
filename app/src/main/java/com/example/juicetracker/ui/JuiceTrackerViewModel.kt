@@ -43,6 +43,7 @@ class JuiceTrackerViewModel(private val productRepository: ProductRepository) : 
     val currentProductStream: StateFlow<Product> = _currentJuiceStream
     val productListStream: Flow<List<Product>> = productRepository.productStream
 
+    val testCheckList = productRepository.getCheckList()
 
 
 

@@ -21,6 +21,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chaquo.python.Python
 import com.example.juicetracker.R
@@ -75,7 +76,8 @@ fun JuiceTrackerListItem(
             checked = (product.checkState),
             onCheckedChange = {
                 juiceTrackerViewModel.updateCheckState(it, productID)
-            } )
+            }
+        )
 
         JuiceDetails(product, Modifier.weight(1f))
         DeleteButton(

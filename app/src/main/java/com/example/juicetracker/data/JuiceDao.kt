@@ -16,6 +16,9 @@ interface JuiceDao {
     @Query("SELECT * FROM product")
     fun getAll(): Flow<List<Product>>
 
+    @Query("SELECT checkState FROM product")
+    fun getCheckList(): Flow<List<Boolean>>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(product: Product)
 

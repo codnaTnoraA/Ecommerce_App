@@ -9,6 +9,9 @@ interface ProductRepository {
     val productStream: Flow<List<Product>>
 
     val juiceDao: JuiceDao
+
+    fun getCheckList(): Flow<List<Boolean>>
+
     suspend fun addJuice(product: Product)
     suspend fun deleteJuice(product: Product)
     suspend fun updateJuice(product: Product)

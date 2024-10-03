@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetValue
@@ -16,6 +17,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.juicetracker.ui.bottomsheet.EditBottomSheet
 import com.example.juicetracker.ui.bottomsheet.EntryBottomSheet
 import com.example.juicetracker.ui.homescreen.AddProductButton
 import com.example.juicetracker.ui.homescreen.CheckAllUI
@@ -39,6 +41,18 @@ fun JuiceTrackerApp(
 
     val scope = rememberCoroutineScope()
     val trackerState by juiceTrackerViewModel.productListStream.collectAsState(emptyList())
+
+    val testCheckList by juiceTrackerViewModel.testCheckList.collectAsState(emptyList())
+
+    EditBottomSheet(editScaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = rememberStandardBottomSheetState(
+            initialValue = SheetValue.Expanded,
+            skipHiddenState = true,
+        )
+        )
+    ) {
+
+    }
 
     EntryBottomSheet(
         juiceTrackerViewModel = juiceTrackerViewModel,
@@ -81,9 +95,7 @@ fun JuiceTrackerApp(
             },
             bottomBar = {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-
                     CheckAllUI()
-
 
                     Spacer(modifier = Modifier.weight(1f))
 
