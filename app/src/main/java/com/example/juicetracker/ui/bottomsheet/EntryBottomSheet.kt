@@ -228,11 +228,6 @@ fun SheetFormAddProduct(
         Text(text = "Note: Price will be based on your keyword. \n" +
                 "To get price info, use Google Finance to find the ticker symbol of the company. Example: AAPL = Apple Inc")
 
-        val juiceTrackerViewModel: JuiceTrackerViewModel = viewModel(factory = AppViewModelProvider.Factory)
-
-
-
-
 //      logic for making sure minPrice < maxPrice
         subButtonEnabled = product.minPrice!! < product.maxPrice!!
                 && product.name.isNotEmpty()
@@ -373,9 +368,4 @@ fun InputRow(
             content()
         }
     }
-}
-
-private fun findColorIndex(color: String): Int {
-    val juiceColor = JuiceColor.valueOf(color)
-    return JuiceColor.entries.indexOf(juiceColor)
 }
