@@ -1,5 +1,6 @@
 package com.example.juicetracker.ui.homescreen
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -88,6 +91,7 @@ fun JuiceTrackerListItem(
     }
 }
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 fun JuiceDetails(product: Product, modifier: Modifier = Modifier) {
     val model: JuiceTrackerViewModel = viewModel(factory = AppViewModelProvider.Factory)

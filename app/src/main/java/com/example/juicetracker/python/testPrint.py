@@ -20,7 +20,7 @@ def testFun(keyword):
         else:
             return data["Time Series (Daily)"][yesterday.strftime("%Y-%m-%d")]["4. close"]
     except:
-        return f"Cannot retrieve data. Check keyword or your internet connection {keyword}"
+        return f"Cannot retrieve data. Check keyword or your internet connection. Current keyword: {keyword}"
 
 def get_yesterday():
     return yesterday.strftime("%Y-%m-%d")
