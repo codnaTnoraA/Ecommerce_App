@@ -52,8 +52,6 @@ fun EntryBottomSheet(
 ) {
     val juice by juiceTrackerViewModel.currentProductStream.collectAsState()
 
-    val testCheckList by juiceTrackerViewModel.testCheckList.collectAsState(emptyList())
-
     BottomSheetScaffold(
         modifier = modifier,
         scaffoldState = sheetScaffoldState,

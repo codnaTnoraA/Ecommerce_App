@@ -1,5 +1,6 @@
 package com.example.juicetracker.ui.homescreen
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -28,6 +32,9 @@ import com.example.juicetracker.R
 import com.example.juicetracker.data.Product
 import com.example.juicetracker.ui.AppViewModelProvider
 import com.example.juicetracker.ui.JuiceTrackerViewModel
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 @Composable
 fun JuiceTrackerList(
@@ -92,15 +99,9 @@ fun JuiceTrackerListItem(
 
 @Composable
 fun JuiceDetails(product: Product, modifier: Modifier = Modifier) {
-//    val py = Python.getInstance()
-//    val testPrint = py.getModule("testPrint")
-//    val getUSDStock = testPrint["testFun"]
-//    val getPHPStock = testPrint["usd_to_php"]
-//    val _day = testPrint["get_yesterday"]
-//
-//    val usdStock = getUSDStock?.call(product.keyword).toString()
-////    val phpStock = getPHPStock?.call(usdStock.toFloat()).toString()
-//    val day = _day?.call().toString()
+    val model: JuiceTrackerViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    model.getDate()
+    model.getStockPrices(product.keyword)
 
     Column(modifier, verticalArrangement = Arrangement.Top) {
         Text(
@@ -109,10 +110,11 @@ fun JuiceDetails(product: Product, modifier: Modifier = Modifier) {
         )
         Text("Minimum Price : ₱${product.minPrice.toString()} ")
         Text("Maximum Price : ₱${product.maxPrice.toString()} ")
-//        Text(text = "\n Market price as of ${day}:")
-//        Text("$${usdStock}", fontWeight = FontWeight.Bold) // It uses data from yesterday as data is sourced from the US which is behind in time.
+        Text(text = "\n Market price as of ${model.day.value}:")
+        Text("$${model.stockPrice.value}",  fontWeight = FontWeight.Bold) // It uses data from yesterday as data is sourced from the US which is behind in time.
     }
 }
+
 
 @Composable
 fun DeleteButton(onDelete: () -> Unit, modifier: Modifier = Modifier) {

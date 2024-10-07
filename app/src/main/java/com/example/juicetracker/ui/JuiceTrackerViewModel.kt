@@ -5,13 +5,19 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.chaquo.python.Python
 import com.example.juicetracker.data.JuiceColor
 import com.example.juicetracker.data.Product
 import com.example.juicetracker.data.ProductRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +25,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -27,6 +34,9 @@ import kotlinx.coroutines.launch
  * View Model which maintain states for [JuiceTrackerApp]
  */
 class JuiceTrackerViewModel(private val productRepository: ProductRepository) : ViewModel() {
+    private val py = Python.getInstance()
+    private val testPrint = py.getModule("testPrint")
+
     private val emptyProduct = Product(
         id = 0,
         name = "",
@@ -54,6 +64,27 @@ class JuiceTrackerViewModel(private val productRepository: ProductRepository) : 
         viewModelScope.launch { productRepository.updateCheckState(emptyProduct, checkState, productID) }
     }
 
+    val day: MutableState<String> = mutableStateOf("Loading date...")
+    val stockPrice: MutableState<String> = mutableStateOf("Loading Stock Price...")
+
+    fun getDate() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val getYesterday = testPrint["get_yesterday"]
+            val _day = getYesterday?.call().toString()
+            day.value = _day
+        }
+    }
+
+    fun getStockPrices(keyWord: String) {
+        val keyword = keyWord
+
+        viewModelScope.launch(Dispatchers.Default) {
+            val getUSDStock = testPrint["testFun"]
+            val usdStock = getUSDStock?.call(keyword).toString() // Stock price
+
+            stockPrice.value = usdStock
+        }
+    }
 
 //    TODO FIX THIS FUNCTIONALITY TO PREVENT DUPLICATES WHEN ADDING PRODUCTS (Product.name won't repeat)
     suspend fun itemDuplicateTrueFalse(product: Product): Boolean {

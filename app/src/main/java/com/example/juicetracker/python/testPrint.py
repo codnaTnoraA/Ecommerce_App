@@ -10,7 +10,7 @@ yesterday = current_day - datetime.timedelta(days = 1)
 def testFun(keyword):
 
     try:
-        url = f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={keyword}&apikey={api_key2}'
+        url = f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={keyword}&apikey={api_key}'
         r = requests.get(url)
         data = r.json()
         if data == "":
@@ -20,7 +20,7 @@ def testFun(keyword):
         else:
             return data["Time Series (Daily)"][yesterday.strftime("%Y-%m-%d")]["4. close"]
     except:
-        return "Cannot retrieve data. Check keyword or your internet connection"
+        return f"Cannot retrieve data. Check keyword or your internet connection {keyword}"
 
 def get_yesterday():
     return yesterday.strftime("%Y-%m-%d")
