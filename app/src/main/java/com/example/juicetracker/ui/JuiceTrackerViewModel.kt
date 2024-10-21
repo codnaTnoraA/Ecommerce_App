@@ -10,12 +10,15 @@ import com.example.juicetracker.data.Product
 import com.example.juicetracker.data.ProductRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -65,14 +68,17 @@ class JuiceTrackerViewModel(private val productRepository: ProductRepository) : 
         }
     }
 
-    fun getStockPrices(keyWord: String) {
-        val keyword = keyWord
-
-        viewModelScope.launch(Dispatchers.Default) {
-            val getUSDStock = testPrint["testFun"]
-            val usdStock = getUSDStock?.call(keyword).toString() // Stock price
-
-            stockPrice.value = usdStock
+    fun getStockPrices() {
+        val getUSDStock = testPrint["testFun"]
+        viewModelScope.launch {
+            productListStream.onEach { productList ->
+                println(productList)
+                productList.onEach { product ->
+                    val usdStock = getUSDStock?.call(product.keyword).toString() // Stock price
+                    stockPrice.value = usdStock
+                    println(product.keyword)
+                }
+            }
         }
     }
 
@@ -81,7 +87,11 @@ class JuiceTrackerViewModel(private val productRepository: ProductRepository) : 
         return productRepository.duplicateItemTrueFalse(product)
     }
 
-
+    fun editPrice(minPrice: Float, maxPrice: Float) {
+        viewModelScope.launch {
+            productRepository.editPrice(minPrice, maxPrice)
+        }
+    }
 
 //    For deleting a single item
     fun updateDeleteState(deleteState: Boolean, productID: Long) = viewModelScope.launch {

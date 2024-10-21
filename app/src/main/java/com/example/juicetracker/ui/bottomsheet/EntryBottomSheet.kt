@@ -19,8 +19,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableDoubleState
+import androidx.compose.runtime.MutableFloatState
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -39,6 +43,7 @@ import com.example.juicetracker.data.Product
 import com.example.juicetracker.ui.AppViewModelProvider
 import com.example.juicetracker.ui.JuiceTrackerViewModel
 import java.util.Locale
+import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,22 +62,22 @@ fun EntryBottomSheet(
         scaffoldState = sheetScaffoldState,
         sheetContent = {
             if (juiceTrackerViewModel.editButtonState.value) {
+//                Edit Price Fun
                 Column {
                     SheetHeader(
                         Modifier.padding(dimensionResource(R.dimen.padding_small)),
                         textHeader = "Edit Price"
                     )
                     SheetFormEditPrice(
-                        product = juice,
-                        onUpdateJuice = juiceTrackerViewModel::updateCurrentJuice,
+                        juiceTrackerViewModel = juiceTrackerViewModel,
                         onCancel = onCancel,
-                        onSubmit = onSubmit,
                         modifier = Modifier.padding(
                             horizontal = dimensionResource(R.dimen.padding_medium)
                         )
                     )
                 }
             } else {
+//                Add Product fun
                 Column {
                     SheetHeader(
                         Modifier.padding(dimensionResource(R.dimen.padding_small)),
@@ -112,14 +117,20 @@ fun SheetHeader(
 
 @Composable
 fun SheetFormEditPrice(
-    product: Product,
-    onUpdateJuice: (Product) -> Unit,
+    juiceTrackerViewModel: JuiceTrackerViewModel,
     onCancel: () -> Unit,
-    onSubmit: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var subButtonEnabled by remember {
         mutableStateOf(false)
+    }
+
+    var minPrice by remember {
+        mutableFloatStateOf(0.0F)
+    }
+
+    var maxPrice by remember {
+        mutableFloatStateOf(0.0F)
     }
 
     Column(
@@ -129,37 +140,36 @@ fun SheetFormEditPrice(
         // Minimum Price field
         IntInputRow(
             inputLabel = "Minimum Price",
-            fieldValue = product.minPrice.toString(),
-            onValueChange = { minPrice ->
-                if (minPrice.toFloat() <= 99999) {
-                    onUpdateJuice(product.copy(minPrice = minPrice.toFloat()))
+            fieldValue = minPrice.toString(),
+            onValueChange = { minimumPrice ->
+                if (minimumPrice.toFloat() <= 99999) {
+                    minPrice = minimumPrice.toFloat()
                 }
             },
             modifier = Modifier.fillMaxWidth()
         )
 
         // Maximum Price field
-        IntInputRow(
+        LastIntInputRow(
             inputLabel = "Maximum Price",
-            fieldValue = product.maxPrice.toString(),
-            onValueChange = { maxPrice ->
-                if (maxPrice.toFloat() <= 99999) {
-                    onUpdateJuice(product.copy(maxPrice = maxPrice.toFloat()))
+            fieldValue = maxPrice.toString(),
+            onValueChange = { maximumPrice ->
+                if (maximumPrice.toFloat() <= 99999) {
+                    maxPrice = maximumPrice.toFloat()
                 }
 
             },
             modifier = Modifier.fillMaxWidth()
         )
 //      logic for making sure minPrice < maxPrice
-        subButtonEnabled = product.minPrice!! < product.maxPrice!!
-                && product.name.isNotEmpty()
+        subButtonEnabled = minPrice < maxPrice
 
         ButtonRow(
             modifier = Modifier
                 .align(Alignment.End)
                 .padding(bottom = dimensionResource(R.dimen.padding_medium)),
             onCancel = onCancel,
-            onSubmit = onSubmit,
+            onSubmit = { juiceTrackerViewModel.editPrice(minPrice, maxPrice) },
             submitButtonEnabled = subButtonEnabled
         )
 
@@ -343,6 +353,33 @@ fun IntInputRow(
             ),
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Next,
+                keyboardType = KeyboardType.Decimal
+            )
+        )
+    }
+}
+
+@Composable
+fun LastIntInputRow(
+    inputLabel: String,
+    fieldValue: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    InputRow(inputLabel, modifier) {
+        TextField(
+            modifier = Modifier.padding(bottom = dimensionResource(R.dimen.padding_small)),
+            value = fieldValue,
+            onValueChange = onValueChange,
+            singleLine = true,
+            maxLines = 1,
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = colorScheme.surface,
+                unfocusedContainerColor = colorScheme.surface,
+                disabledContainerColor = colorScheme.surface,
+            ),
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Done,
                 keyboardType = KeyboardType.Decimal
             )
         )

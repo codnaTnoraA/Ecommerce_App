@@ -40,6 +40,9 @@ interface JuiceDao {
     @Update
     suspend fun update(product: Product)
 
+    @Query("UPDATE product SET minPrice =:minPrice, maxPrice =:maxPrice WHERE checkState = True")
+    suspend fun editPrice(minPrice: Float, maxPrice: Float)
+
     @Query("SELECT * FROM product WHERE name LIKE :name")
     fun searchQuery(name: String): Flow<List<Product>>
 

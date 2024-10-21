@@ -96,7 +96,7 @@ fun JuiceTrackerListItem(
 fun JuiceDetails(product: Product, modifier: Modifier = Modifier) {
     val model: JuiceTrackerViewModel = viewModel(factory = AppViewModelProvider.Factory)
     model.getDate()
-    model.getStockPrices(product.keyword)
+    model.getStockPrices()
 
     Column(modifier, verticalArrangement = Arrangement.Top) {
         Text(

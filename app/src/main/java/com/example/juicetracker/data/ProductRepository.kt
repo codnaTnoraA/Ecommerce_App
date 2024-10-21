@@ -21,6 +21,8 @@ interface ProductRepository {
         return juiceDao.searchQuery(searchQuery)
     }
 
+    suspend fun editPrice(minPrice: Float, maxPrice: Float)
+
     suspend fun duplicateItemTrueFalse(product: Product): Boolean {
         return juiceDao.insertItemIfNotExists(product)
     }
