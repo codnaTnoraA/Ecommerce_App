@@ -16,8 +16,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -29,27 +31,47 @@ import com.example.juicetracker.R
 import com.example.juicetracker.data.Product
 import com.example.juicetracker.ui.AppViewModelProvider
 import com.example.juicetracker.ui.JuiceTrackerViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
+@SuppressLint("UnrememberedMutableState", "CoroutineCreationDuringComposition")
 @Composable
 fun JuiceTrackerList(
-//    juiceTrackerViewModel: JuiceTrackerViewModel,
+    juiceTrackerViewModel: JuiceTrackerViewModel,
     products: List<Product>,
     onDelete: (Product) -> Unit,
     onUpdate: (Product) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    juiceTrackerViewModel.getDate()
+    val _day = juiceTrackerViewModel.day
+    val day = _day.value
 
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(vertical = dimensionResource(R.dimen.padding_small)),
     ) {
-        items(items = products) { juice ->
+        items(items = products) { product ->
+
+            val _stockPrice: MutableState<String> = mutableStateOf("Loading Stock Price...")
+//            TODO fix bug where when any action on Composable is started, stock resets
+            rememberCoroutineScope().launch(Dispatchers.IO) {
+                val _stock = juiceTrackerViewModel.getStockPrices(product.keyword).await()
+                _stockPrice.value = _stock
+                println("The function has executed")
+                println("stockPrice(Mutable) = $_stockPrice")
+            }
+
             JuiceTrackerListItem(
-                product = juice,
+                product = product,
+                stockPrice = _stockPrice,
+                day = day,
                 onDelete = onDelete,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { onUpdate(juice) }
+                    .clickable { onUpdate(product) }
                     .padding(
                         vertical = dimensionResource(R.dimen.padding_small),
                         horizontal = dimensionResource(R.dimen.padding_medium)
@@ -63,6 +85,8 @@ fun JuiceTrackerList(
 fun JuiceTrackerListItem(
     modifier: Modifier = Modifier,
     product: Product,
+    stockPrice: MutableState<String>,
+    day: String,
     juiceTrackerViewModel: JuiceTrackerViewModel  = viewModel(factory = AppViewModelProvider.Factory),
     onDelete: (Product) -> Unit,
 ) {
@@ -80,7 +104,7 @@ fun JuiceTrackerListItem(
             }
         )
 
-        JuiceDetails(product, Modifier.weight(1f))
+        JuiceDetails(product, stockPrice, day, Modifier.weight(1f))
         DeleteButton(
             onDelete = {
                 juiceTrackerViewModel.updateDeleteState(true, productID)
@@ -91,13 +115,14 @@ fun JuiceTrackerListItem(
     }
 }
 
-@SuppressLint("UnrememberedMutableState")
+@SuppressLint("UnrememberedMutableState", "CoroutineCreationDuringComposition")
 @Composable
-fun JuiceDetails(product: Product, modifier: Modifier = Modifier) {
-    val model: JuiceTrackerViewModel = viewModel(factory = AppViewModelProvider.Factory)
-    model.getDate()
-    model.getStockPrices()
-
+fun JuiceDetails(
+    product: Product,
+    stockPrice: MutableState<String>,
+    day: String,
+    modifier: Modifier = Modifier
+) {
     Column(modifier, verticalArrangement = Arrangement.Top) {
         Text(
             text = product.name,
@@ -105,9 +130,11 @@ fun JuiceDetails(product: Product, modifier: Modifier = Modifier) {
         )
         Text("Minimum Price : ₱${product.minPrice.toString()} ")
         Text("Maximum Price : ₱${product.maxPrice.toString()} ")
-        Text(text = "\n Market price as of ${model.day.value}:")
-        Text("$${model.stockPrice.value}",  fontWeight = FontWeight.Bold) // It uses data from yesterday as data is sourced from the US which is behind in time.
+        Text(text = "\n Market price as of $day:")
+        Text(stockPrice.value,  fontWeight = FontWeight.Bold) // It uses data from yesterday as data is sourced from the US which is behind in time.
     }
+
+
 }
 
 

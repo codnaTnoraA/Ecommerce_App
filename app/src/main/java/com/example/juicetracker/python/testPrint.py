@@ -13,12 +13,21 @@ def testFun(keyword):
         url = f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={keyword}&apikey={api_key}'
         r = requests.get(url)
         data = r.json()
+        stock_price = data["Time Series (Daily)"][yesterday.strftime("%Y-%m-%d")]["4. close"]
+
+        url_test = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&apikey=demo"
+        r_test = requests.get(url_test)
+        data_test = r_test.json()
+        stock_price_test = data_test["Time Series (Daily)"][yesterday.strftime("%Y-%m-%d")]["4. close"]
+
+
         if data == "":
             # recent_date = next(iter(data['Time Series (Daily)']))
             # close_price = data['Time Series (Daily)'][recent_date]['4. close']
             return "No data found"
         else:
-            return data["Time Series (Daily)"][yesterday.strftime("%Y-%m-%d")]["4. close"]
+            # return data["Time Series (Daily)"][yesterday.strftime("%Y-%m-%d")]["4. close"]
+            return f"${stock_price}"
     except:
         return f"Cannot retrieve data. Check keyword or your internet connection. Current keyword: {keyword}"
 

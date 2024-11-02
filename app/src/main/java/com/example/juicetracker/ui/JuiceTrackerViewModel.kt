@@ -8,17 +8,16 @@ import com.chaquo.python.Python
 import com.example.juicetracker.data.JuiceColor
 import com.example.juicetracker.data.Product
 import com.example.juicetracker.data.ProductRepository
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -58,8 +57,6 @@ class JuiceTrackerViewModel(private val productRepository: ProductRepository) : 
     }
 
     val day: MutableState<String> = mutableStateOf("Loading date...")
-    val stockPrice: MutableState<String> = mutableStateOf("Loading Stock Price...")
-
     fun getDate() {
         viewModelScope.launch(Dispatchers.IO) {
             val getYesterday = testPrint["get_yesterday"]
@@ -68,18 +65,11 @@ class JuiceTrackerViewModel(private val productRepository: ProductRepository) : 
         }
     }
 
-    fun getStockPrices() {
+    fun getStockPrices(keyword: String): Deferred<String> = viewModelScope.async(Dispatchers.IO) {
         val getUSDStock = testPrint["testFun"]
-        viewModelScope.launch {
-            productListStream.onEach { productList ->
-                println(productList)
-                productList.onEach { product ->
-                    val usdStock = getUSDStock?.call(product.keyword).toString() // Stock price
-                    stockPrice.value = usdStock
-                    println(product.keyword)
-                }
-            }
-        }
+        val stock = getUSDStock?.call(keyword).toString()
+        return@async stock
+
     }
 
 //    TODO FIX THIS FUNCTIONALITY TO PREVENT DUPLICATES WHEN ADDING PRODUCTS (Product.name won't repeat)
