@@ -36,7 +36,6 @@ fun JuiceTrackerTopAppBar(
     juiceTrackerViewModel: JuiceTrackerViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val context = LocalContext.current
-
     TopAppBar(
         modifier = modifier,
         colors = TopAppBarDefaults.topAppBarColors(
@@ -54,7 +53,14 @@ fun JuiceTrackerTopAppBar(
                 Spacer(modifier = modifier.weight(1f))
                 SearchButton(
                     modifier = Modifier.align(alignment = Alignment.CenterVertically),
-                    onClick = { context.startActivity(Intent(context, SearchActivity::class.java)) }
+                    onClick = {
+                        context.startActivity(
+                            Intent(
+                                context,
+                                SearchActivity::class.java
+                            )
+                        )
+                    }
                 )
             }
         }

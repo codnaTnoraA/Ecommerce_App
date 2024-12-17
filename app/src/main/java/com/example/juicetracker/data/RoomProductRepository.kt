@@ -37,4 +37,7 @@ class RoomProductRepository(override val juiceDao: JuiceDao) : ProductRepository
     override suspend fun deleteItem() {
         juiceDao.deleteItem()
     }
+
+    override suspend fun batchDelete() = super.batchDelete()
+
 }

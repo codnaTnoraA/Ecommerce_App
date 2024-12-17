@@ -35,4 +35,5 @@ interface ProductRepository {
     suspend fun falseDeleteState(product: Product, deleteState: Boolean) = juiceDao.falseDeleteState(deleteState)
 
     suspend fun deleteItem() = juiceDao.deleteItem()
+    suspend fun batchDelete() = juiceDao.batchDelete(true)
 }

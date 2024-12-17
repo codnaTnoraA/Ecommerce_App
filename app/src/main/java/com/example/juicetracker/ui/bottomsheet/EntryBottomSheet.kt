@@ -42,6 +42,7 @@ import com.example.juicetracker.data.JuiceColor
 import com.example.juicetracker.data.Product
 import com.example.juicetracker.ui.AppViewModelProvider
 import com.example.juicetracker.ui.JuiceTrackerViewModel
+import com.example.juicetracker.ui.homescreen.DeleteButton
 import java.util.Locale
 import kotlin.math.absoluteValue
 
@@ -178,7 +179,6 @@ fun SheetFormEditPrice(
            },
             submitButtonEnabled = subButtonEnabled
         )
-
     }
 }
 

@@ -128,12 +128,17 @@ class JuiceTrackerViewModel(private val productRepository: ProductRepository) : 
         }
     }
 
-    fun deleteJuice() = viewModelScope.launch {
-        productRepository.deleteItem()
-    }
+
 
     val confirmDeleteState = mutableStateOf(false)
     fun deleteProductConfirm(product: Product) = viewModelScope.launch {
         confirmDeleteState.value = true
     }
+    fun deleteJuice() = viewModelScope.launch {
+        productRepository.deleteItem()
+    }
+
+    val confirmBatchDeleteState = mutableStateOf(false)
+    fun batchDeleteConfirm()  = viewModelScope.launch { confirmBatchDeleteState.value = true }
+    fun batchDelete() = viewModelScope.launch { productRepository.batchDelete() }
 }

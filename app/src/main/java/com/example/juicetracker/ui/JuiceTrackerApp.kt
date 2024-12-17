@@ -22,9 +22,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.juicetracker.ui.bottomsheet.EntryBottomSheet
 import com.example.juicetracker.ui.homescreen.AddProductButton
 import com.example.juicetracker.ui.homescreen.CheckAllUI
+import com.example.juicetracker.ui.homescreen.DeleteButton
 import com.example.juicetracker.ui.homescreen.EditPriceButton
 import com.example.juicetracker.ui.homescreen.JuiceTrackerList
 import com.example.juicetracker.ui.homescreen.JuiceTrackerTopAppBar
+import com.example.juicetracker.ui.homescreen.confirmDialogBox.ConfirmBatchDeleteDialogBox
 import com.example.juicetracker.ui.homescreen.confirmDialogBox.ConfirmDeleteDialogBox
 import kotlinx.coroutines.launch
 
@@ -86,6 +88,22 @@ fun JuiceTrackerApp(
             }
         }
 
+        val openBatchDeleteAlertDialog = juiceTrackerViewModel.confirmBatchDeleteState
+        when {
+            // ...
+            openBatchDeleteAlertDialog.value -> {
+                ConfirmBatchDeleteDialogBox(
+                    onDismissRequest = {
+                        openBatchDeleteAlertDialog.value = false
+                    },
+                    onConfirmation = {
+                        openBatchDeleteAlertDialog.value = false
+                        juiceTrackerViewModel.batchDelete()
+                    }
+                )
+            }
+        }
+
         Scaffold(
             topBar = {
                 JuiceTrackerTopAppBar()
@@ -97,6 +115,12 @@ fun JuiceTrackerApp(
                     Spacer(modifier = Modifier.weight(1f))
                     if (testCheckList.contains(true)) {
 //                        TODO add function to button
+                        DeleteButton(
+                            onDelete = {
+                                juiceTrackerViewModel.batchDeleteConfirm()
+                            },
+                            modifier = Modifier.align(Alignment.CenterVertically)
+                        )
                         EditPriceButton {
                             juiceTrackerViewModel.editButtonState.value = true
                             scope.launch { bottomSheetScaffoldState.bottomSheetState.expand() }

@@ -61,4 +61,7 @@ interface JuiceDao {
 
     @Query("DELETE FROM product WHERE deleteState=:ifFalse")
     suspend fun deleteItem(ifFalse: Boolean = true)
+
+    @Query("DELETE FROM product WHERE checkState=:checkState")
+    suspend fun batchDelete(checkState: Boolean)
 }
