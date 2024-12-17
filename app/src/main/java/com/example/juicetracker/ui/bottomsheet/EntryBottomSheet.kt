@@ -53,6 +53,7 @@ fun EntryBottomSheet(
     onCancel: () -> Unit,
     onSubmit: () -> Unit,
     modifier: Modifier = Modifier,
+    bottomSheetHide: () -> Unit,
     content: @Composable () -> Unit,
 ) {
     val juice by juiceTrackerViewModel.currentProductStream.collectAsState()
@@ -73,7 +74,8 @@ fun EntryBottomSheet(
                         onCancel = onCancel,
                         modifier = Modifier.padding(
                             horizontal = dimensionResource(R.dimen.padding_medium)
-                        )
+                        ),
+                        sheetHide = { bottomSheetHide() }
                     )
                 }
             } else {
@@ -120,6 +122,7 @@ fun SheetFormEditPrice(
     juiceTrackerViewModel: JuiceTrackerViewModel,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,
+    sheetHide: () -> Unit,
 ) {
     var subButtonEnabled by remember {
         mutableStateOf(false)
@@ -169,7 +172,10 @@ fun SheetFormEditPrice(
                 .align(Alignment.End)
                 .padding(bottom = dimensionResource(R.dimen.padding_medium)),
             onCancel = onCancel,
-            onSubmit = { juiceTrackerViewModel.editPrice(minPrice, maxPrice) },
+            onSubmit = {
+                juiceTrackerViewModel.editPrice(minPrice, maxPrice)
+                sheetHide()
+           },
             submitButtonEnabled = subButtonEnabled
         )
 

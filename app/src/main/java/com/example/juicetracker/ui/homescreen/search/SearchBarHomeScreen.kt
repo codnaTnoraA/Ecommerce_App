@@ -71,7 +71,8 @@ fun SearchBarHomeScreen(
                 scope.launch {
                     bottomSheetScaffoldState.bottomSheetState.hide()
                 }
-            }
+            },
+            bottomSheetHide = { scope.launch { bottomSheetScaffoldState.bottomSheetState.hide() } }
         ) {
             val openDeleteAlertDialog = juiceTrackerViewModel.confirmDeleteState
             when {

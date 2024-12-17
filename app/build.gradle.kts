@@ -79,10 +79,12 @@ android {
 
 chaquopy {
     defaultConfig {
-        version = "3.8"
+        version = "3.13"
         pip {
             install("requests")
             install("CurrencyConverter")
+            install("pandas")
+            install("yfinance")
         }
     }
 

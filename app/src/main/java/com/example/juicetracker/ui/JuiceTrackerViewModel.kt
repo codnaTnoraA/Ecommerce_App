@@ -27,6 +27,7 @@ import kotlinx.coroutines.launch
  */
 class JuiceTrackerViewModel(private val productRepository: ProductRepository) : ViewModel() {
     private val py = Python.getInstance()
+    private val yahoo_finance = py.getModule("yahoo_finance")
     private val testPrint = py.getModule("testPrint")
 
     private val emptyProduct = Product(
@@ -59,14 +60,14 @@ class JuiceTrackerViewModel(private val productRepository: ProductRepository) : 
     val day: MutableState<String> = mutableStateOf("Loading date...")
     fun getDate() {
         viewModelScope.launch(Dispatchers.IO) {
-            val getYesterday = testPrint["get_yesterday"]
+            val getYesterday = yahoo_finance["get_yesterday"]
             val _day = getYesterday?.call().toString()
             day.value = _day
         }
     }
 
     fun getStockPrices(keyword: String): Deferred<String> = viewModelScope.async(Dispatchers.IO) {
-        val getUSDStock = testPrint["testFun"]
+        val getUSDStock = yahoo_finance["getStockData"]
         val stock = getUSDStock?.call(keyword).toString()
         return@async stock
 

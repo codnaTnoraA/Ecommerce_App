@@ -64,7 +64,8 @@ fun JuiceTrackerApp(
             scope.launch {
                 bottomSheetScaffoldState.bottomSheetState.hide()
             }
-        }
+        },
+        bottomSheetHide = { scope.launch { bottomSheetScaffoldState.bottomSheetState.hide() } }
     ) {
 //        Delete Confirmation function
         val openDeleteAlertDialog = juiceTrackerViewModel.confirmDeleteState
