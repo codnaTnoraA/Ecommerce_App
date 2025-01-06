@@ -114,6 +114,7 @@ dependencies {
     implementation("androidx.room:room-ktx:${rootProject.extra["room_version"]}")
     implementation("androidx.room:room-runtime:${rootProject.extra["room_version"]}")
     implementation("com.google.android.gms:play-services-ads:22.2.0")
+    implementation("io.finnhub:kotlin-client:2.0.20")
 
 
 
@@ -133,7 +134,5 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
-
-
 
 }

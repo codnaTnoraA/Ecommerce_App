@@ -21,10 +21,13 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import io.finnhub.api.apis.DefaultApi
+import io.finnhub.api.infrastructure.ApiClient
 
 /**
  * View Model which maintain states for [JuiceTrackerApp]
  */
+
 class JuiceTrackerViewModel(private val productRepository: ProductRepository) : ViewModel() {
     private val py = Python.getInstance()
     private val yahoo_finance = py.getModule("yahoo_finance")
@@ -67,8 +70,13 @@ class JuiceTrackerViewModel(private val productRepository: ProductRepository) : 
     }
 
     fun getStockPrices(keyword: String): Deferred<String> = viewModelScope.async(Dispatchers.IO) {
-        val getUSDStock = yahoo_finance["getStockData"]
-        val stock = getUSDStock?.call(keyword).toString()
+//        val getUSDStock = yahoo_finance["getStockData"]
+//        val stockTest = getUSDStock?.call(keyword).toString()
+
+        val apiKey = "ctie3ahr01qm6mumr4lgctie3ahr01qm6mumr4m0"
+        ApiClient.apiKey["token"] = apiKey
+        val apiClient = DefaultApi()
+        val stock = "$${apiClient.quote(keyword).c.toString()}"
         return@async stock
 
     }
