@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import io.finnhub.api.apis.DefaultApi
 import io.finnhub.api.infrastructure.ApiClient
+import io.finnhub.api.infrastructure.ClientException
 
 /**
  * View Model which maintain states for [JuiceTrackerApp]
@@ -72,14 +73,25 @@ class JuiceTrackerViewModel(private val productRepository: ProductRepository) : 
     fun getStockPrices(keyword: String): Deferred<String> = viewModelScope.async(Dispatchers.IO) {
 //        val getUSDStock = yahoo_finance["getStockData"]
 //        val stockTest = getUSDStock?.call(keyword).toString()
-
-        val apiKey = "ctie3ahr01qm6mumr4lgctie3ahr01qm6mumr4m0"
-        ApiClient.apiKey["token"] = apiKey
-        val apiClient = DefaultApi()
-        val stock = "$${apiClient.quote(keyword).c.toString()}"
-        return@async stock
-
+        try {
+            val apiKey = "ctie3ahr01qm6mumr4lgctie3ahr01qm6mumr4m0"
+            ApiClient.apiKey["token"] = apiKey
+            val apiClient = DefaultApi()
+            val stock = "$${apiClient.quote(keyword).c.toString()}"
+            return@async stock
+        } catch (e: ClientException) {
+            return@async "An unexpected error has occured"
+        }
     }
+//    AI Price
+//    fun calculate_price(keyword: String): Deferred<String> = viewModelScope.async(Dispatchers.IO) {
+//        try {
+//            yahoo_finance["predict_price"]
+//            return@async ""
+//        } catch (e: ClientException) {
+//            return@async ""
+//        }
+//    }
 
 //    TODO FIX THIS FUNCTIONALITY TO PREVENT DUPLICATES WHEN ADDING PRODUCTS (Product.name won't repeat)
     suspend fun itemDuplicateTrueFalse(product: Product): Boolean {

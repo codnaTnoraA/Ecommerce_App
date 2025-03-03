@@ -232,16 +232,16 @@ fun SheetFormAddProduct(
             },
             modifier = Modifier.fillMaxWidth()
         )
-        // Keyword field
+        // Stock Ticker Symbol field
         LastTextInputRow(
-            inputLabel = "Keyword",
+            inputLabel = "Stock Ticker Symbol",
             fieldValue = product.keyword,
             onValueChange = { keyword -> onUpdateJuice(product.copy(keyword = keyword)) },
             modifier = Modifier.fillMaxWidth(),
             placeholderText = "Keyword"
         )
         
-        Text(text = "Note: Price will be based on your keyword. \n" +
+        Text(text = "Note: Price will be based on your Stock Ticker Symbol. \n" +
                 "To get price info, use Google Finance to find the ticker symbol of the company. Example: AAPL = Apple Inc")
 
 //      logic for making sure minPrice < maxPrice

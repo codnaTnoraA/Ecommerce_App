@@ -1,7 +1,8 @@
 import yfinance as yf
 import datetime
 import json
-import pandas
+import pickle
+import pandas as pd
 
 current_day = datetime.datetime.today()
 yesterday = current_day - datetime.timedelta(days = 1)
@@ -21,3 +22,9 @@ def getStockData(keyword):
 
 def get_yesterday():
     return yesterday.strftime("%Y-%m-%d")
+
+# def predict_price():
+#     # load
+#     with open('model.pkl', 'rb') as f:
+#         model = pickle.load(f)
+#     return
