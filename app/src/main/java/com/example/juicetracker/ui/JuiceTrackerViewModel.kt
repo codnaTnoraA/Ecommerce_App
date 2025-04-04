@@ -8,6 +8,9 @@ import com.chaquo.python.Python
 import com.example.juicetracker.data.JuiceColor
 import com.example.juicetracker.data.Product
 import com.example.juicetracker.data.ProductRepository
+import io.finnhub.api.apis.DefaultApi
+import io.finnhub.api.infrastructure.ApiClient
+import io.finnhub.api.infrastructure.ClientException
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -21,9 +24,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import io.finnhub.api.apis.DefaultApi
-import io.finnhub.api.infrastructure.ApiClient
-import io.finnhub.api.infrastructure.ClientException
 
 /**
  * View Model which maintain states for [JuiceTrackerApp]
@@ -32,7 +32,6 @@ import io.finnhub.api.infrastructure.ClientException
 class JuiceTrackerViewModel(private val productRepository: ProductRepository) : ViewModel() {
     private val py = Python.getInstance()
     private val yahoo_finance = py.getModule("yahoo_finance")
-    private val testPrint = py.getModule("testPrint")
 
     private val emptyProduct = Product(
         id = 0,

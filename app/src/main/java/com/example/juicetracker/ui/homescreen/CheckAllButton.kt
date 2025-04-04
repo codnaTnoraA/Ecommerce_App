@@ -1,13 +1,10 @@
 package com.example.juicetracker.ui.homescreen
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -24,7 +21,8 @@ import com.example.juicetracker.ui.JuiceTrackerViewModel
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun CheckAllButton(
-    juiceTrackerViewModel: JuiceTrackerViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    juiceTrackerViewModel: JuiceTrackerViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    productCheckList: List<Boolean>
 ): Unit {
 
     // Type List<Product>
@@ -35,17 +33,16 @@ fun CheckAllButton(
 
     var checkAllButtonCheckedState = remember { mutableStateOf(false) }
 
-
-//        mutableStateOf(false)
-
-
-//    val childCheckedStates = remember { productDao.getAllCheckState() }
-
-//    val parentState = when {
-//        childCheckedStates.all { it } -> ToggleableState.On
-//        childCheckedStates.none { it } -> ToggleableState.Off
-//        else -> ToggleableState.Indeterminate
-//    }
+//    Logic for check all
+    if(productCheckList.contains(false)) {
+        checkAllButtonCheckedState.value = false
+    } else if(productCheckList.all { true }) {
+        if(trackerState.isEmpty()) {
+            checkAllButtonCheckedState.value = false
+        } else {
+        checkAllButtonCheckedState.value = true
+            }
+    }
 
     Checkbox(
         checked = checkAllButtonCheckedState.value,
@@ -63,9 +60,9 @@ fun CheckAllText(modifier: Modifier? = Modifier) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CheckAllUI() {
+fun CheckAllUI(productCheckList: List<Boolean>) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        CheckAllButton()
+        CheckAllButton(productCheckList = productCheckList)
         CheckAllText()
     }
 }

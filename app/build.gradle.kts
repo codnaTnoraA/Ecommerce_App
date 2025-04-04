@@ -115,6 +115,9 @@ dependencies {
     implementation("androidx.room:room-runtime:${rootProject.extra["room_version"]}")
     implementation("com.google.android.gms:play-services-ads:22.2.0")
     implementation("io.finnhub:kotlin-client:2.0.20")
+//    Splash Screens
+    implementation("androidx.core:core-splashscreen:1.0.1")
+
 
 
 

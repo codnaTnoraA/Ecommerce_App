@@ -13,7 +13,14 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.JuiceTracker" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.JuiceTracker" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowSplashScreenBackground" tools:targetApi="s">@color/yellow</item>
+        <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="s">@drawable/dynamic_pricing_splash</item>
+        <item name="android:windowSplashScreenIconBackgroundColor" tools:targetApi="s">@color/yellow </item>
+        <item name="android:windowSplashScreenAnimationDuration" tools:targetApi="s">1000</item>
+        <item name="android:windowSplashscreenContent" tools:targetApi="o">@drawable/dynamic_pricing_splash </item>
+
+    </style>
 </resources>

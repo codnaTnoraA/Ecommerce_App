@@ -110,7 +110,7 @@ fun JuiceTrackerListItem(
         JuiceDetails(product, stockPrice, day, Modifier.weight(1f))
 
         Text(
-            text = "$${product.maxPrice.toString()}", // TODO Apply the AI calculated price here
+            text = "₱${product.maxPrice.toString()}", // TODO Apply the AI calculated price here
             style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
             modifier = Modifier
 //                .align(Alignment.CenterVertically)

@@ -4,12 +4,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.BottomSheetScaffold
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetValue
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
@@ -48,7 +45,7 @@ fun JuiceTrackerApp(
     val scope = rememberCoroutineScope()
     val trackerState by juiceTrackerViewModel.productListStream.collectAsState(emptyList())
 
-    val testCheckList by juiceTrackerViewModel.testCheckList.collectAsState(emptyList())
+    val productCheckList by juiceTrackerViewModel.testCheckList.collectAsState(emptyList())
 
 
 
@@ -110,10 +107,10 @@ fun JuiceTrackerApp(
             },
             bottomBar = {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    CheckAllUI()
+                    CheckAllUI(productCheckList)
 
                     Spacer(modifier = Modifier.weight(1f))
-                    if (testCheckList.contains(true)) {
+                    if (productCheckList.contains(true)) {
 //                        TODO add function to button
                         DeleteButton(
                             onDelete = {
