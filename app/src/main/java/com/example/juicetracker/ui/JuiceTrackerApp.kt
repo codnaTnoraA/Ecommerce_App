@@ -15,7 +15,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.example.juicetracker.ui.bottomsheet.EntryBottomSheet
 import com.example.juicetracker.ui.homescreen.AddProductButton
 import com.example.juicetracker.ui.homescreen.CheckAllUI
@@ -25,11 +27,13 @@ import com.example.juicetracker.ui.homescreen.JuiceTrackerList
 import com.example.juicetracker.ui.homescreen.JuiceTrackerTopAppBar
 import com.example.juicetracker.ui.homescreen.confirmDialogBox.ConfirmBatchDeleteDialogBox
 import com.example.juicetracker.ui.homescreen.confirmDialogBox.ConfirmDeleteDialogBox
+import com.example.juicetracker.ui.homescreen.tutorial.TutorialFloatingActionButton
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JuiceTrackerApp(
+    controller: NavHostController,
     juiceTrackerViewModel: JuiceTrackerViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
 
@@ -146,6 +150,14 @@ fun JuiceTrackerApp(
                         }
                     },
                 )
+                Spacer(Modifier.weight(1f))
+                Row {
+                    Spacer(Modifier.weight(1f))
+                    TutorialFloatingActionButton(
+                        onClick = {controller.navigate("tutorial")},
+                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp)
+                    )
+                }
             }
         }
     }

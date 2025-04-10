@@ -5,16 +5,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.chaquo.python.Python
 import com.chaquo.python.android.AndroidPlatform
-import com.example.juicetracker.ui.AppViewModelProvider
 import com.example.juicetracker.ui.JuiceTrackerApp
-import com.example.juicetracker.ui.JuiceTrackerViewModel
-import com.example.juicetracker.ui.homescreen.Tutorial
+import com.example.juicetracker.ui.homescreen.tutorial.Tutorial
 
 
 class MainActivity : ComponentActivity() {
@@ -31,7 +28,7 @@ class MainActivity : ComponentActivity() {
             val controller = rememberNavController()
             NavHost(navController = controller, startDestination = "mainApp") {
                 composable("tutorial") {  Tutorial(controller) }
-                composable("mainApp") { JuiceTrackerApp() }
+                composable("mainApp") { JuiceTrackerApp(controller) }
                 composable("home") {}
             }
             if(preferences.getBoolean("firstrun", true)) {

@@ -1,8 +1,7 @@
-package com.example.juicetracker.ui.homescreen
+package com.example.juicetracker.ui.homescreen.tutorial
 
 import android.annotation.SuppressLint
 import android.util.Log
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +16,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -63,7 +63,8 @@ fun Tutorial(controller: NavHostController) {
                                 Log.d("NavigationTiming", "Navigation took ${endTime - startTime} ms")
                             },
                             content = { Text("Skip") },
-                            modifier = Modifier
+                            modifier = Modifier,
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
                         )
                     }
                 }
