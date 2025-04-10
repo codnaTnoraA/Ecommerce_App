@@ -66,8 +66,3 @@ fun JuiceTrackerTopAppBar(
         }
     )
 }
-@Preview
-@Composable
-fun ajsdbka() {
-    JuiceTrackerTopAppBar()
-}

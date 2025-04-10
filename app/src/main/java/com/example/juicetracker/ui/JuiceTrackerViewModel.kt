@@ -8,9 +8,6 @@ import com.chaquo.python.Python
 import com.example.juicetracker.data.JuiceColor
 import com.example.juicetracker.data.Product
 import com.example.juicetracker.data.ProductRepository
-import io.finnhub.api.apis.DefaultApi
-import io.finnhub.api.infrastructure.ApiClient
-import io.finnhub.api.infrastructure.ClientException
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -30,8 +27,9 @@ import kotlinx.coroutines.launch
  */
 
 class JuiceTrackerViewModel(private val productRepository: ProductRepository) : ViewModel() {
+
     private val py = Python.getInstance()
-    private val yahoo_finance = py.getModule("yahoo_finance")
+    private val pyGetDate = py.getModule("python_get_date")
 
     private val emptyProduct = Product(
         id = 0,
@@ -63,24 +61,14 @@ class JuiceTrackerViewModel(private val productRepository: ProductRepository) : 
     val day: MutableState<String> = mutableStateOf("Loading date...")
     fun getDate() {
         viewModelScope.launch(Dispatchers.IO) {
-            val getYesterday = yahoo_finance["get_yesterday"]
+            val getYesterday = pyGetDate["get_yesterday"]
             val _day = getYesterday?.call().toString()
             day.value = _day
         }
     }
 
     fun getStockPrices(keyword: String): Deferred<String> = viewModelScope.async(Dispatchers.IO) {
-//        val getUSDStock = yahoo_finance["getStockData"]
-//        val stockTest = getUSDStock?.call(keyword).toString()
-        try {
-            val apiKey = "ctie3ahr01qm6mumr4lgctie3ahr01qm6mumr4m0"
-            ApiClient.apiKey["token"] = apiKey
-            val apiClient = DefaultApi()
-            val stock = "$${apiClient.quote(keyword).c.toString()}"
-            return@async stock
-        } catch (e: ClientException) {
-            return@async "An unexpected error has occured"
-        }
+        return@async "TODO FIX THIS" //TODO FIX THIS
     }
 //    AI Price
 //    fun calculate_price(keyword: String): Deferred<String> = viewModelScope.async(Dispatchers.IO) {

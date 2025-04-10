@@ -145,8 +145,6 @@ fun JuiceDetails(
         Text(text = "\n Market price as of $day:")
         Text(stockPrice.value,  fontWeight = FontWeight.Bold) // It uses data from yesterday as data is sourced from the US which is behind in time.
     }
-
-
 }
 
 

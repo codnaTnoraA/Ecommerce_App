@@ -5,28 +5,52 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.chaquo.python.Python
 import com.chaquo.python.android.AndroidPlatform
 import com.example.juicetracker.ui.AppViewModelProvider
 import com.example.juicetracker.ui.JuiceTrackerApp
 import com.example.juicetracker.ui.JuiceTrackerViewModel
-import kotlinx.coroutines.delay
+import com.example.juicetracker.ui.homescreen.Tutorial
+
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val preferences = this.getPreferences(MODE_PRIVATE)?: return
+
+        if (!Python.isStarted()) {
+            Python.start(AndroidPlatform(this))
+        }
+
         setContent {
-            if (! Python.isStarted()) {
-                Python.start(AndroidPlatform(this))
+            val controller = rememberNavController()
+            NavHost(navController = controller, startDestination = "mainApp") {
+                composable("tutorial") {  Tutorial(controller) }
+                composable("mainApp") { JuiceTrackerApp() }
+                composable("home") {}
             }
-
-            val productViewModel: JuiceTrackerViewModel = viewModel(factory = AppViewModelProvider.Factory)
-            productViewModel.updateAllCheckState(false)
-
-            JuiceTrackerApp()
+            if(preferences.getBoolean("firstrun", true)) {
+                controller.navigate("tutorial")
+                preferences.edit().putBoolean("firstrun", false).apply()
+            } else {
+                controller.navigate("mainApp")
+            }
         }
     }
+
+//    override fun onResume() {
+//        super.onResume()
+//        val preferences = this.getPreferences(MODE_PRIVATE)?: return
+//        if(preferences.getBoolean("firstrun", true)) {
+//            setContent {
+//                Tutorial()
+//            }
+//            preferences.edit().putBoolean("firstrun", false).apply()
+//        }
+//    }
 }
