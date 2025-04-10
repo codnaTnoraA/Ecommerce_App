@@ -19,9 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableDoubleState
-import androidx.compose.runtime.MutableFloatState
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -36,15 +33,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.juicetracker.R
-import com.example.juicetracker.data.JuiceColor
 import com.example.juicetracker.data.Product
-import com.example.juicetracker.ui.AppViewModelProvider
 import com.example.juicetracker.ui.JuiceTrackerViewModel
-import com.example.juicetracker.ui.homescreen.DeleteButton
 import java.util.Locale
-import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -232,7 +224,7 @@ fun SheetFormAddProduct(
             },
             modifier = Modifier.fillMaxWidth()
         )
-        // Stock Ticker Symbol field
+        // Keyword
         LastTextInputRow(
             inputLabel = "Keyword",
             fieldValue = product.keyword,
