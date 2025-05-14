@@ -19,7 +19,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.juicetracker.ui.AppViewModelProvider
 import com.example.juicetracker.ui.JuiceTrackerViewModel
 import com.example.juicetracker.ui.bottomsheet.EntryBottomSheet
-import com.example.juicetracker.ui.homescreen.JuiceTrackerList
+import com.example.juicetracker.ui.homescreen.JuiceTrackerListSearch
 import com.example.juicetracker.ui.homescreen.confirmDialogBox.ConfirmDeleteDialogBox
 import kotlinx.coroutines.launch
 
@@ -94,7 +94,7 @@ fun SearchBarHomeScreen(
             val list by juiceTrackerViewModel.searchResults.collectAsState()
 
             Column {
-                JuiceTrackerList(
+                JuiceTrackerListSearch(
                     juiceTrackerViewModel = juiceTrackerViewModel,
                     products = list,
                     onDelete = { product -> juiceTrackerViewModel.deleteProductConfirm(product) },

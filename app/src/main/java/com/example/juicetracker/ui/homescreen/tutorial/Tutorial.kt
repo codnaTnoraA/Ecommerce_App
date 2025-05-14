@@ -1,11 +1,8 @@
 package com.example.juicetracker.ui.homescreen.tutorial
 
-import android.util.DisplayMetrics
 import android.util.Log
-import android.util.TypedValue
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,22 +23,18 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -52,7 +45,8 @@ import kotlin.math.absoluteValue
 
 @Composable
 fun Tutorial(controller: NavHostController) {
-    val pagerState = rememberPagerState(pageCount = { 3 })
+    val pagerState = rememberPagerState(pageCount = { 7 })
+    var skipText by remember { mutableStateOf("") }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
@@ -63,24 +57,15 @@ fun Tutorial(controller: NavHostController) {
                     .padding(bottom = 8.dp),
 //                horizontalArrangement = Arrangement.Center
             ) {
-                Column {
-                    Row {
+                    Row(horizontalArrangement = Arrangement.Absolute.Right) {
+                        Spacer(Modifier.weight(1.0f))
                         Button(
-                            onClick = {
-                                val startTime = System.currentTimeMillis()
-                                controller.navigate("mainApp")
-                                val endTime = System.currentTimeMillis()
-                                Log.d(
-                                    "NavigationTiming",
-                                    "Navigation took ${endTime - startTime} ms"
-                                )
-                            },
-                            content = { Text("Skip") },
+                            onClick = { controller.navigate("mainApp") },
+                            content = { Text(skipText) },
                             modifier = Modifier,
                             colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
                         )
                     }
-                }
 
             }
         }
@@ -94,21 +79,30 @@ fun Tutorial(controller: NavHostController) {
                 state = pagerState,
                 modifier = Modifier,
                 snapPosition = pagerState.layoutInfo.snapPosition,
-                contentPadding = PaddingValues(start = 50.dp),
-                pageSpacing = 20.dp
+                contentPadding = PaddingValues(start = 50.dp, end = 50.dp),
+                pageSpacing = 50.dp
             ) { page ->
                 val pagerOffset = pagerState.getOffsetDistanceInPages(page).absoluteValue
                 val tutorialPictures = listOf(
-                    R.drawable.tutorial_1,
-                    R.drawable.tutorial_2,
-                    R.drawable.tutorial_3,
+                    R.drawable.tutorial_step_1,
+                    R.drawable.tutorial_step_2,
+                    R.drawable.tutorial_step_3,
+                    R.drawable.tutorial_step_4,
+                    R.drawable.tutorial_step_5,
+                    R.drawable.tutorial_step_6,
+                    R.drawable.tutorial_step_7,
                 )
-                val tutorialText = listOf(
-                    "Tap \"Add Product\"",
-                    "jhjkhajdkahdjkah",
-                    "akshdgajgda"
+                val _tutorialText = listOf(
+                    "This is the home screen where the list of products are displayed",
+                    "Tap the \"Add Product\" button",
+                    "You can set the product name, minimimum and maximum price, and the keyword.",
+                    "After tapping save, the product will be added",
+                    "Tap the search button\n",
+                    "From here, you can search for specific products",
+                    "You can also edit the product information from this page",
                 )
                 val image = painterResource(tutorialPictures[page])
+                val tutorialText = _tutorialText[page]
 
                 Column {
                     Image(
@@ -133,7 +127,7 @@ fun Tutorial(controller: NavHostController) {
 
                     Text(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
-                        text = tutorialText[page], textAlign = TextAlign.Center,
+                        text = tutorialText, textAlign = TextAlign.Center,
                         fontSize = 15.sp
                     )
 
@@ -146,7 +140,19 @@ fun Tutorial(controller: NavHostController) {
             ) {
                 repeat(pagerState.pageCount) { iteration ->
                     val color =
-                        if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
+                        if (pagerState.currentPage == iteration) {
+                            Color.DarkGray
+                        } else {
+                            Color.LightGray
+                        }
+
+//                    Logic for Skip/Done in tutorial
+                    if (pagerState.currentPage == iteration && iteration == 6) {
+                        skipText = "Done"
+                    } else {
+                        skipText = "Skip"
+                    }
+
                     Box(
                         modifier = Modifier
                             .padding(2.dp)

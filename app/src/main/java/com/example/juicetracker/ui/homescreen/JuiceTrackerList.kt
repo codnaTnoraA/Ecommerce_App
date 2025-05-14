@@ -78,6 +78,49 @@ fun JuiceTrackerList(
     }
 }
 
+@SuppressLint("UnrememberedMutableState", "CoroutineCreationDuringComposition")
+@Composable
+fun JuiceTrackerListSearch(
+    juiceTrackerViewModel: JuiceTrackerViewModel,
+    products: List<Product>,
+    onDelete: (Product) -> Unit,
+    onUpdate: (Product) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    juiceTrackerViewModel.getDate()
+    val _day = juiceTrackerViewModel.day
+    val day = _day.value
+
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(vertical = dimensionResource(R.dimen.padding_small)),
+    ) {
+        items(items = products) { product ->
+
+            val _stockPrice: MutableState<String> = mutableStateOf("Loading Market Price...")
+//            TODO fix bug where when any action on Composable is started, stock resets
+            rememberCoroutineScope().launch(Dispatchers.IO) {
+                val _stock = juiceTrackerViewModel.getStockPrices(product.keyword).await()
+                _stockPrice.value = _stock
+            }
+
+            JuiceTrackerListItemSearch(
+                product = product,
+                stockPrice = _stockPrice,
+                day = day,
+                onDelete = onDelete,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onUpdate(product) }
+                    .padding(
+                        vertical = dimensionResource(R.dimen.padding_small),
+                        horizontal = dimensionResource(R.dimen.padding_medium)
+                    )
+            )
+        }
+    }
+}
+
 @Composable
 fun JuiceTrackerListItem(
     modifier: Modifier = Modifier,
@@ -100,6 +143,43 @@ fun JuiceTrackerListItem(
                 juiceTrackerViewModel.updateCheckState(it, productID)
             }
         )
+
+
+        JuiceDetails(product, stockPrice, day, Modifier.weight(1f))
+
+        Text(
+            text = "₱${product.maxPrice.toString()}", // TODO Apply the AI calculated price here
+            style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+            modifier = Modifier
+//                .align(Alignment.CenterVertically)
+//                .size(10.dp)
+        )
+
+        DeleteButton(
+            onDelete = {
+                juiceTrackerViewModel.updateDeleteState(true, productID)
+                onDelete(product)
+            },
+            modifier = Modifier.align(Alignment.Top)
+        )
+    }
+}
+
+@Composable
+fun JuiceTrackerListItemSearch(
+    modifier: Modifier = Modifier,
+    product: Product,
+    stockPrice: MutableState<String>,
+    day: String,
+    juiceTrackerViewModel: JuiceTrackerViewModel  = viewModel(factory = AppViewModelProvider.Factory),
+    onDelete: (Product) -> Unit,
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+
+        val productID = product.id
 
         JuiceDetails(product, stockPrice, day, Modifier.weight(1f))
 

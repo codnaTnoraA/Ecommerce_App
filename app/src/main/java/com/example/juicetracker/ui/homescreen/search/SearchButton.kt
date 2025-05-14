@@ -22,7 +22,9 @@ fun SearchButton(
     juiceTrackerViewModel: JuiceTrackerViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     IconButton(
-        onClick = { onClick() },
+        onClick = {
+            onClick()
+          },
         content = {
             Icon(
                 painter = painterResource(R.drawable.search_icon),
