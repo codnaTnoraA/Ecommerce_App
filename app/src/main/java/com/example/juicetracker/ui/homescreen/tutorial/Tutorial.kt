@@ -98,7 +98,7 @@ fun Tutorial(controller: NavHostController) {
                     "You can set the product name, minimimum and maximum price, and the keyword.",
                     "After tapping save, the product will be added",
                     "Tap the search button\n",
-                    "From here, you can search for specific products",
+                    "You can search for specific products using the search bar",
                     "You can also edit the product information from this page",
                 )
                 val image = painterResource(tutorialPictures[page])
