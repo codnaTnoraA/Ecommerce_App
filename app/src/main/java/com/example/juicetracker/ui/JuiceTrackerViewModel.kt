@@ -135,6 +135,12 @@ class JuiceTrackerViewModel(private val productRepository: ProductRepository) : 
         }
     }
 
+    fun defaultProductSave(product: Product) = viewModelScope.launch {
+        productRepository.addJuice(product)
+    }
+
+
+
 
 
     val confirmDeleteState = mutableStateOf(false)

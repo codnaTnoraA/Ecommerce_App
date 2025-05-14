@@ -11,6 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import com.chaquo.python.Python
 import com.chaquo.python.android.AndroidPlatform
 import com.example.juicetracker.ui.JuiceTrackerApp
+import com.example.juicetracker.ui.homescreen.tutorial.InsertProductFirstLaunch
 import com.example.juicetracker.ui.homescreen.tutorial.Tutorial
 
 
@@ -29,11 +30,11 @@ class MainActivity : ComponentActivity() {
             NavHost(navController = controller, startDestination = "mainApp") {
                 composable("tutorial") {  Tutorial(controller) }
                 composable("mainApp") { JuiceTrackerApp(controller) }
-                composable("home") {}
             }
             if(preferences.getBoolean("firstrun", true)) {
                 controller.navigate("tutorial")
                 preferences.edit().putBoolean("firstrun", false).apply()
+                InsertProductFirstLaunch()
             } else {
                 controller.navigate("mainApp")
             }

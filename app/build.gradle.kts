@@ -116,7 +116,8 @@ dependencies {
     implementation("com.google.android.gms:play-services-ads:22.2.0")
 //    Splash Screens
     implementation("androidx.core:core-splashscreen:1.0.1")
-
+//    Shapes for graphics
+    implementation("androidx.graphics:graphics-shapes:1.0.1")
 //    Navhost dependency
     implementation("androidx.navigation:navigation-compose:2.8.9")
 

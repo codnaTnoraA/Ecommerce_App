@@ -6,10 +6,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Checkbox
@@ -18,7 +16,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -28,18 +25,15 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.juicetracker.R
 import com.example.juicetracker.data.Product
 import com.example.juicetracker.ui.AppViewModelProvider
 import com.example.juicetracker.ui.JuiceTrackerViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @SuppressLint("UnrememberedMutableState", "CoroutineCreationDuringComposition")
 @Composable
@@ -60,7 +54,7 @@ fun JuiceTrackerList(
     ) {
         items(items = products) { product ->
 
-            val _stockPrice: MutableState<String> = mutableStateOf("Loading Stock Price...")
+            val _stockPrice: MutableState<String> = mutableStateOf("Loading Market Price...")
 //            TODO fix bug where when any action on Composable is started, stock resets
             rememberCoroutineScope().launch(Dispatchers.IO) {
                 val _stock = juiceTrackerViewModel.getStockPrices(product.keyword).await()
@@ -138,7 +132,11 @@ fun JuiceDetails(
     Column(modifier, verticalArrangement = Arrangement.Top) {
         Text(
             text = product.name,
-            style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+            modifier = Modifier,
+            style = MaterialTheme.typography.headlineSmall.copy(
+                fontWeight = FontWeight.Bold,
+//                fontSize = TextUnit. TODO fix this
+            ),
         )
         Text("Minimum Price : ₱${product.minPrice.toString()} ")
         Text("Maximum Price : ₱${product.maxPrice.toString()} ")
