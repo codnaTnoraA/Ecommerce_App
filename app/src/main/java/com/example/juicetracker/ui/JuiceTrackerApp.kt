@@ -130,6 +130,9 @@ fun JuiceTrackerApp(
                                 juiceTrackerViewModel.editButtonState.value = false
                                 juiceTrackerViewModel.resetCurrentJuice()
                                 scope.launch { bottomSheetScaffoldState.bottomSheetState.expand() }
+
+//                                TODO delete this after testing
+                                juiceTrackerViewModel.testAI()
                             }
                         )
                     }

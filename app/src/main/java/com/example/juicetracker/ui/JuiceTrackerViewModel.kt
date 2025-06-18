@@ -31,6 +31,14 @@ class JuiceTrackerViewModel(private val productRepository: ProductRepository) : 
     private val py = Python.getInstance()
     private val pyGetDate = py.getModule("python_get_date")
 
+
+    private val pythonAI = py.getModule("ai")
+    val aiThing = pythonAI["test_fun"]
+//    TODO fix the setup of the ai parameters
+    fun testAI() {
+        viewModelScope.launch(Dispatchers.IO) {  aiThing?.call("What is the date today") }
+    }
+
     private val emptyProduct = Product(
         id = 0,
         name = "",
