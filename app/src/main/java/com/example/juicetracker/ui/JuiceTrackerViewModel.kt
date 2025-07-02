@@ -2,6 +2,7 @@ package com.example.juicetracker.ui
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chaquo.python.Python
@@ -33,11 +34,14 @@ class JuiceTrackerViewModel(private val productRepository: ProductRepository) : 
 
 
     private val pythonAI = py.getModule("ai")
-    val aiThing = pythonAI["test_fun"]
+    val aiThing = pythonAI["ai_price_calculate"]
+
 //    TODO fix the setup of the ai parameters
-    fun testAI() {
-        viewModelScope.launch(Dispatchers.IO) {  aiThing?.call("What is the date today") }
+    fun aiPriceCalculator(keyword: String, minPrice: Float, maxPrice: Float): Deferred<String> = viewModelScope.async(Dispatchers.IO) {
+        println("(aiPrice fun) " + aiThing?.call(keyword, minPrice, maxPrice).toString())
+        aiThing?.call(keyword, minPrice, maxPrice).toString()
     }
+
 
     private val emptyProduct = Product(
         id = 0,

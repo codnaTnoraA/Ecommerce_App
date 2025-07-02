@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -121,6 +122,7 @@ fun JuiceTrackerListSearch(
     }
 }
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun JuiceTrackerListItem(
     modifier: Modifier = Modifier,
@@ -147,8 +149,25 @@ fun JuiceTrackerListItem(
 
         JuiceDetails(product, stockPrice, day, Modifier.weight(1f))
 
+
+//      AI price calculator
+        val _aiPrice = remember { mutableStateOf("") }
+        val aiPrice = _aiPrice.value
+        if (aiPrice == "") {
+            _aiPrice.value = "..."
+            rememberCoroutineScope().launch(Dispatchers.IO) {
+                product.minPrice?.let {
+                    product.maxPrice?.let { it1 ->
+                        println("Before")
+                        _aiPrice.value = juiceTrackerViewModel.aiPriceCalculator(product.keyword, it, it1).await()
+                        println("After")
+                    }
+                }
+            }
+        }
+
         Text(
-            text = "₱${product.maxPrice.toString()}", // TODO Apply the AI calculated price here
+            text = "₱${aiPrice}", // TODO Apply the AI calculated price here
             style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
             modifier = Modifier
 //                .align(Alignment.CenterVertically)
