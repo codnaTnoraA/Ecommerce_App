@@ -57,7 +57,7 @@ fun JuiceTrackerList(
 
             val _stockPrice: MutableState<String> = mutableStateOf("Loading Market Price...")
 //            TODO fix bug where when any action on Composable is started, stock resets
-            rememberCoroutineScope().launch(Dispatchers.IO) {
+            rememberCoroutineScope().launch {
                 val _stock = juiceTrackerViewModel.getStockPrices(product.keyword).await()
                 _stockPrice.value = _stock
             }
@@ -146,21 +146,20 @@ fun JuiceTrackerListItem(
             }
         )
 
-
         JuiceDetails(product, stockPrice, day, Modifier.weight(1f))
-
 
 //      AI price calculator
         val _aiPrice = remember { mutableStateOf("") }
         val aiPrice = _aiPrice.value
-        if (aiPrice == "") {
-            _aiPrice.value = "..."
-            rememberCoroutineScope().launch(Dispatchers.IO) {
+        rememberCoroutineScope().launch {
+            if (aiPrice == "") {
+                _aiPrice.value = "..."
                 product.minPrice?.let {
                     product.maxPrice?.let { it1 ->
                         println("Before")
-                        _aiPrice.value = juiceTrackerViewModel.aiPriceCalculator(product.keyword, it, it1).await()
-                        println("After")
+                        val price = juiceTrackerViewModel.aiPriceCalculator(product.keyword, it, it1).await()
+                        _aiPrice.value = price
+                        println(price)
                     }
                 }
             }

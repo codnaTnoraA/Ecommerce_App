@@ -2,7 +2,6 @@ package com.example.juicetracker.ui
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chaquo.python.Python
@@ -13,6 +12,7 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -39,7 +39,8 @@ class JuiceTrackerViewModel(private val productRepository: ProductRepository) : 
 //    TODO fix the setup of the ai parameters
     fun aiPriceCalculator(keyword: String, minPrice: Float, maxPrice: Float): Deferred<String> = viewModelScope.async(Dispatchers.IO) {
         println("(aiPrice fun) " + aiThing?.call(keyword, minPrice, maxPrice).toString())
-        aiThing?.call(keyword, minPrice, maxPrice).toString()
+        val price = aiThing?.call(keyword, minPrice, maxPrice).toString()
+        return@async price
     }
 
 

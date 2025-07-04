@@ -120,6 +120,7 @@ dependencies {
     implementation("androidx.graphics:graphics-shapes:1.0.1")
 //    Navhost dependency
     implementation("androidx.navigation:navigation-compose:2.8.9")
+    implementation("junit:junit:4.12")
 
 
 
