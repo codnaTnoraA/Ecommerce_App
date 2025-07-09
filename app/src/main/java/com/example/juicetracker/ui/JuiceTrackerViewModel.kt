@@ -39,8 +39,7 @@ class JuiceTrackerViewModel(private val productRepository: ProductRepository) : 
 //    TODO fix the setup of the ai parameters
     fun aiPriceCalculator(keyword: String, minPrice: Float, maxPrice: Float): Deferred<String> = viewModelScope.async(Dispatchers.IO) {
         println("(aiPrice fun) " + aiThing?.call(keyword, minPrice, maxPrice).toString())
-        val price = aiThing?.call(keyword, minPrice, maxPrice).toString()
-        return@async price
+        return@async aiThing?.call(keyword, minPrice, maxPrice).toString()
     }
 
 

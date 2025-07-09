@@ -16,7 +16,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -28,13 +31,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.juicetracker.MainActivity
 import com.example.juicetracker.R
 import com.example.juicetracker.data.Product
 import com.example.juicetracker.ui.AppViewModelProvider
 import com.example.juicetracker.ui.JuiceTrackerViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.properties.Delegates
 
 @SuppressLint("UnrememberedMutableState", "CoroutineCreationDuringComposition")
 @Composable
@@ -43,7 +52,7 @@ fun JuiceTrackerList(
     products: List<Product>,
     onDelete: (Product) -> Unit,
     onUpdate: (Product) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     juiceTrackerViewModel.getDate()
     val _day = juiceTrackerViewModel.day
@@ -73,7 +82,7 @@ fun JuiceTrackerList(
                     .padding(
                         vertical = dimensionResource(R.dimen.padding_small),
                         horizontal = dimensionResource(R.dimen.padding_medium)
-                    )
+                    ),
             )
         }
     }
@@ -132,6 +141,9 @@ fun JuiceTrackerListItem(
     juiceTrackerViewModel: JuiceTrackerViewModel  = viewModel(factory = AppViewModelProvider.Factory),
     onDelete: (Product) -> Unit,
 ) {
+
+
+
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -142,25 +154,25 @@ fun JuiceTrackerListItem(
         Checkbox(
             checked = (product.checkState),
             onCheckedChange = {
-                juiceTrackerViewModel.updateCheckState(it, productID)
+                    juiceTrackerViewModel.updateCheckState(it, productID)
             }
         )
 
         JuiceDetails(product, stockPrice, day, Modifier.weight(1f))
 
+
+
 //      AI price calculator
         val _aiPrice = remember { mutableStateOf("") }
         val aiPrice = _aiPrice.value
-        rememberCoroutineScope().launch {
-            if (aiPrice == "") {
-                _aiPrice.value = "..."
-                product.minPrice?.let {
-                    product.maxPrice?.let { it1 ->
-                        println("Before")
-                        val price = juiceTrackerViewModel.aiPriceCalculator(product.keyword, it, it1).await()
-                        _aiPrice.value = price
-                        println(price)
-                    }
+        LaunchedEffect(product.maxPrice, product.minPrice, product.keyword){
+            _aiPrice.value = "..."
+            product.minPrice?.let {
+                product.maxPrice?.let { it1 ->
+                    println("Before")
+                    val price = juiceTrackerViewModel.aiPriceCalculator(product.keyword, it, it1).await()
+                    _aiPrice.value = price
+                    println(price)
                 }
             }
         }
@@ -201,13 +213,11 @@ fun JuiceTrackerListItemSearch(
 
         JuiceDetails(product, stockPrice, day, Modifier.weight(1f))
 
-        Text(
-            text = "₱${product.maxPrice.toString()}", // TODO Apply the AI calculated price here
-            style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
-            modifier = Modifier
-//                .align(Alignment.CenterVertically)
-//                .size(10.dp)
-        )
+//        Text(
+//            text = "₱${product.maxPrice.toString()}", // TODO Apply the AI calculated price here
+//            style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+//            modifier = Modifier
+//        )
 
         DeleteButton(
             onDelete = {
@@ -238,8 +248,8 @@ fun JuiceDetails(
         )
         Text("Minimum Price : ₱${product.minPrice.toString()} ")
         Text("Maximum Price : ₱${product.maxPrice.toString()} ")
-        Text(text = "\n Market price as of $day:")
-        Text(stockPrice.value,  fontWeight = FontWeight.Bold) // It uses data from yesterday as data is sourced from the US which is behind in time.
+//        Text(text = "\n Market price as of $day:")
+//        Text(stockPrice.value,  fontWeight = FontWeight.Bold) // It uses data from yesterday as data is sourced from the US which is behind in time.
     }
 }
 
